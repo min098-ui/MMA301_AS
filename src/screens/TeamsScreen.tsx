@@ -61,6 +61,7 @@ export const TeamsScreen: React.FC = () => {
           <Text style={styles.subtitle}>{t.teamsSubtitle}</Text>
 
           <View style={styles.badge}>
+            <Ionicons name="snow" size={12} color={Colors.primary} />
             <View style={styles.liveDot} />
             <Text style={styles.badgeText}>{t.teamsMilestone}</Text>
           </View>

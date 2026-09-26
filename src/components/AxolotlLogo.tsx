@@ -29,7 +29,7 @@ export const SnowFoxLogo: React.FC<SnowFoxLogoProps> = ({
             useNativeDriver: true,
           }),
           Animated.timing(scaleAnim, {
-            toValue: 1.03,
+            toValue: 1.04,
             duration: 1600,
             useNativeDriver: true,
           }),
@@ -58,7 +58,7 @@ export const SnowFoxLogo: React.FC<SnowFoxLogoProps> = ({
 
   const handleTap = () => {
     // Playful bounce on tap
-    tapBounceAnim.setValue(0.88);
+    tapBounceAnim.setValue(0.86);
     Animated.spring(tapBounceAnim, {
       toValue: 1,
       friction: 3,
@@ -108,14 +108,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {
-    backgroundColor: '#E0F2FE', // Ice Sky Blue tint
-    borderWidth: 1.5,
-    borderColor: '#BAE6FD',
+    backgroundColor: '#E0F2FE', // Glacial Ice Tint
+    borderWidth: 2,
+    borderColor: '#7DD3FC', // Vibrant Crystalline Ice Border
     shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.18,
-    shadowRadius: 6,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.28,
+    shadowRadius: 8,
+    elevation: 5,
     overflow: 'hidden',
   },
   image: {

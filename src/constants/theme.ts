@@ -1,53 +1,53 @@
 export const Colors = {
-  // Executive Modern Palette (Linear / Stripe / iOS Reminders style)
-  primary: '#4F46E5', // Indigo 600 - Confident, modern & professional
-  primaryHover: '#4338CA', // Indigo 700
-  primaryDark: '#3730A3', // Indigo 800
-  primaryLight: '#EEF2FF', // Indigo 50 - Subtle background highlights
-  primarySoft: '#E0E7FF', // Indigo 100
+  // Frozen Arctic Winter & Glacial Ice Palette (Tuyết đông giá lạnh sắc sảo)
+  primary: '#0284C7', // Arctic Ocean Blue (Deep, crisp & glacial)
+  primaryHover: '#0369A1', // Deep Polar Fjord
+  primaryDark: '#0C4A6E', // Polar Midnight Trench
+  primaryLight: '#E0F2FE', // Powder Snow Blue (Light, crisp frost)
+  primarySoft: '#BAE6FD', // Ice Crystal Blue
 
-  accent: '#0284C7', // Sky 600
-  accentLight: '#F0F9FF', // Sky 50
+  accent: '#06B6D4', // Northern Cyan Glacier
+  accentLight: '#ECFEFF', // Aurora Frost Tint
 
-  background: '#F8FAFC', // Slate 50 - Ultra-clean, crisp canvas
-  surface: '#FFFFFF', // Pure White
+  background: '#EDF5FD', // Frozen Glacial Mist - Authentic frosty winter canvas
+  surface: '#FFFFFF', // Pure Polar Snow (Crisp crystalline cards)
   surfaceElevated: '#FFFFFF',
-  surfaceVariant: '#F1F5F9', // Slate 100 - Secondary containers & dividers
-  surfaceSubtle: '#F8FAFC',
+  surfaceVariant: '#E2EFFB', // Frosted Ice Shelf container
+  surfaceSubtle: '#F1F7FC',
 
-  border: '#E2E8F0', // Slate 200 - Clean, razor-sharp outlines
-  borderLight: '#F1F5F9', // Slate 100
-  borderFocus: '#6366F1', // Indigo 500
+  border: '#CFE4F6', // Crystalline Frost Border - razor-sharp & icy
+  borderLight: '#E2EEF8', // Soft Ice Shelf line
+  borderFocus: '#0284C7', // Vivid Ice Crystal highlight
 
-  textPrimary: '#0F172A', // Slate 900 - High contrast & readable
-  textSecondary: '#475569', // Slate 600 - Clear secondary text
-  textMuted: '#94A3B8', // Slate 400 - Subtle placeholders & icons
+  textPrimary: '#0B1E36', // Polar Midnight Obsidian - Razor-sharp high contrast
+  textSecondary: '#335070', // Glacial Slate - Legible & refined
+  textMuted: '#688CAE', // Frost Mist Blue
 
-  // Status Colors (Refined, legible tones with matched subtle backgrounds)
-  statusTodo: '#2563EB', // Blue 600
-  statusTodoBg: '#EFF6FF', // Blue 50
-  statusTodoBorder: '#BFDBFE', // Blue 200
+  // Status Colors (Icy, crystalline tones)
+  statusTodo: '#0284C7', // Frozen Ocean Blue
+  statusTodoBg: '#E0F2FE',
+  statusTodoBorder: '#BAE6FD',
 
-  statusInProgress: '#D97706', // Amber 600
-  statusInProgressBg: '#FFFBEB', // Amber 50
-  statusInProgressBorder: '#FDE68A', // Amber 200
+  statusInProgress: '#D97706', // Arctic Sun Amber
+  statusInProgressBg: '#FEF3C7',
+  statusInProgressBorder: '#FDE68A',
 
-  statusCompleted: '#059669', // Emerald 600
-  statusCompletedBg: '#ECFDF5', // Emerald 50
-  statusCompletedBorder: '#A7F3D0', // Emerald 200
+  statusCompleted: '#0D9488', // Aurora Glacial Teal
+  statusCompletedBg: '#E6FFFA',
+  statusCompletedBorder: '#99F6E4',
 
-  // Priority Colors
-  priorityHigh: '#E11D48', // Rose 600
-  priorityHighBg: '#FFF1F2', // Rose 50
-  priorityHighBorder: '#FECDD3', // Rose 200
+  // Priority Colors (Crisp Frost tags)
+  priorityHigh: '#E11D48', // Crimson Frost
+  priorityHighBg: '#FFE4E6',
+  priorityHighBorder: '#FECDD3',
 
-  priorityMed: '#7C3AED', // Violet 600
-  priorityMedBg: '#F5F3FF', // Violet 50
-  priorityMedBorder: '#DDD6FE', // Violet 200
+  priorityMed: '#7C3AED', // Polar Twilight Violet
+  priorityMedBg: '#F5F3FF',
+  priorityMedBorder: '#DDD6FE',
 
-  priorityLow: '#0D9488', // Teal 600
-  priorityLowBg: '#F0FDFA', // Teal 50
-  priorityLowBorder: '#CCFBF1', // Teal 200
+  priorityLow: '#0284C7', // Crystal Ice Blue
+  priorityLowBg: '#E0F2FE',
+  priorityLowBorder: '#BAE6FD',
 
   danger: '#EF4444',
   dangerBg: '#FEE2E2',
@@ -77,24 +77,24 @@ export const Radius = {
 
 export const Shadows = {
   card: {
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    elevation: 2,
+    shadowColor: '#0369A1',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.07,
+    shadowRadius: 8,
+    elevation: 3,
   },
   modal: {
-    shadowColor: '#0F172A',
+    shadowColor: '#0B1E36',
     shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
+    shadowOpacity: 0.15,
+    shadowRadius: 18,
     elevation: 10,
   },
   button: {
-    shadowColor: '#4F46E5',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    elevation: 4,
+    shadowColor: '#0284C7',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
 };

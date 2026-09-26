@@ -21,6 +21,7 @@ export const ProfileScreen: React.FC = () => {
           <Text style={styles.userRole}>{t.profileRole}</Text>
 
           <View style={styles.badge}>
+            <Ionicons name="snow" size={12} color={Colors.primary} />
             <View style={styles.liveDot} />
             <Text style={styles.badgeText}>{t.profileTag}</Text>
           </View>

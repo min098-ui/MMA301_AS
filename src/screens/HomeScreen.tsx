@@ -91,8 +91,9 @@ export const HomeScreen: React.FC = () => {
             <View style={styles.titleRow}>
               <Text style={styles.brandName}>{t.appName}</Text>
               <View style={styles.liveBadge}>
+                <Ionicons name="snow" size={11} color={Colors.primary} />
                 <View style={styles.liveDot} />
-                <Text style={styles.liveText}>LIVE</Text>
+                <Text style={styles.liveText}>SYNC</Text>
               </View>
             </View>
             <Text style={styles.brandSubtitle} numberOfLines={1}>
@@ -342,8 +343,10 @@ const styles = StyleSheet.create({
   liveBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.successBg,
-    paddingHorizontal: 6,
+    backgroundColor: '#E0F2FE',
+    borderWidth: 1,
+    borderColor: '#BAE6FD',
+    paddingHorizontal: 7,
     paddingVertical: 2,
     borderRadius: Radius.full,
     gap: 4,
@@ -352,12 +355,12 @@ const styles = StyleSheet.create({
     width: 5,
     height: 5,
     borderRadius: 2.5,
-    backgroundColor: Colors.success,
+    backgroundColor: Colors.primary,
   },
   liveText: {
     fontSize: 9,
     fontWeight: '800',
-    color: Colors.success,
+    color: Colors.primary,
     letterSpacing: 0.4,
   },
   brandSubtitle: {
