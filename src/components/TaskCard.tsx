@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Task, TaskStatus, TaskPriority } from '../types/task';
+import { useLanguage } from '../context/LanguageContext';
 import { Colors, Spacing, Radius } from '../constants/theme';
 
 interface TaskCardProps {
@@ -12,6 +13,8 @@ interface TaskCardProps {
 }
 
 export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onToggleStatus }) => {
+  const { t } = useLanguage();
+
   const getStatusBadge = (status: TaskStatus) => {
     switch (status) {
       case 'Completed':
@@ -38,22 +41,22 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onTo
   const getPriorityBadge = (priority: TaskPriority) => {
     switch (priority) {
       case 'High':
-        return { bg: Colors.priorityHighBg, text: Colors.priorityHigh };
+        return { bg: Colors.priorityHighBg, text: Colors.priorityHigh, label: t.prioHigh };
       case 'Medium':
-        return { bg: Colors.priorityMedBg, text: Colors.priorityMed };
+        return { bg: Colors.priorityMedBg, text: Colors.priorityMed, label: t.prioMed };
       default:
-        return { bg: Colors.priorityLowBg, text: Colors.priorityLow };
+        return { bg: Colors.priorityLowBg, text: Colors.priorityLow, label: t.prioLow };
     }
   };
 
   const confirmDelete = () => {
     Alert.alert(
-      'Delete Task',
-      `Are you sure you want to delete "${task.title}"?`,
+      t.deleteTitle,
+      `${t.deleteConfirm} "${task.title}"?`,
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t.cancel, style: 'cancel' },
         {
-          text: 'Delete',
+          text: t.delete,
           style: 'destructive',
           onPress: () => onDelete(task.id),
         },
@@ -82,7 +85,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onTo
 
         <View style={[styles.badge, { backgroundColor: priorityStyle.bg }]}>
           <Text style={[styles.badgeText, { color: priorityStyle.text }]}>
-            {task.priority === 'High' ? '🍓 Cao' : task.priority === 'Medium' ? '🍬 Vừa' : '🍀 Thấp'}
+            {priorityStyle.label}
           </Text>
         </View>
 
@@ -118,7 +121,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onTo
       <View style={styles.footerRow}>
         <View style={styles.metaItem}>
           <Ionicons name="calendar-outline" size={13} color={Colors.textMuted} />
-          <Text style={styles.metaText}>Due: {task.dueDate || 'No date'}</Text>
+          <Text style={styles.metaText}>{t.due}: {task.dueDate || 'No date'}</Text>
         </View>
         <Text style={styles.idText}>ID: {task.id.slice(0, 8)}...</Text>
       </View>

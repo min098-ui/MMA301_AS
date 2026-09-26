@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Task, TaskStatus, TaskPriority, CreateTaskInput, UpdateTaskInput } from '../types/task';
+import { useLanguage } from '../context/LanguageContext';
 import { Colors, Spacing, Radius } from '../constants/theme';
 
 interface TaskModalProps {
@@ -35,6 +36,7 @@ const getDefaultDueDate = () => {
 };
 
 const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubmit }) => {
+  const { t } = useLanguage();
   const isEditing = Boolean(taskToEdit);
 
   const [title, setTitle] = useState(taskToEdit ? taskToEdit.title : '');
@@ -86,9 +88,9 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
       {/* Header */}
       <View style={styles.modalHeader}>
         <View>
-          <Text style={styles.modalTitle}>{isEditing ? 'Edit Task' : 'Create New Task'}</Text>
+          <Text style={styles.modalTitle}>{isEditing ? t.editTaskTitle : t.createTaskTitle}</Text>
           <Text style={styles.modalSubtitle}>
-            {isEditing ? 'Update task details and status' : 'Add a new task to your project'}
+            {isEditing ? t.editTaskSubtitle : t.createTaskSubtitle}
           </Text>
         </View>
         <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
@@ -100,7 +102,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
         {/* Title Field */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>
-            Title <Text style={styles.requiredAsterisk}>*</Text>
+            {t.titleLabel} <Text style={styles.requiredAsterisk}>*</Text>
           </Text>
           <TextInput
             style={[styles.input, Boolean(titleError) && styles.inputError]}
@@ -117,7 +119,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
 
         {/* Description Field */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Description (optional)</Text>
+          <Text style={styles.label}>{t.descLabel}</Text>
           <TextInput
             style={[styles.input, styles.textArea]}
             placeholder="Add context, acceptance criteria, or notes..."
@@ -132,7 +134,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
 
         {/* Status Selector */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Status</Text>
+          <Text style={styles.label}>{t.statusLabel}</Text>
           <View style={styles.pillRow}>
             {statuses.map((s) => {
               const active = status === s;
@@ -151,7 +153,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
 
         {/* Priority Selector */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Priority</Text>
+          <Text style={styles.label}>{t.priorityLabel}</Text>
           <View style={styles.pillRow}>
             {priorities.map((p) => {
               const active = priority === p;
@@ -161,7 +163,9 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
                   style={[styles.pill, active && styles.activePill]}
                   onPress={() => setPriority(p)}
                 >
-                  <Text style={[styles.pillText, active && styles.activePillText]}>{p}</Text>
+                  <Text style={[styles.pillText, active && styles.activePillText]}>
+                    {p === 'High' ? t.prioHigh : p === 'Medium' ? t.prioMed : t.prioLow}
+                  </Text>
                 </TouchableOpacity>
               );
             })}
@@ -170,7 +174,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
 
         {/* Due Date Field */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Due Date (YYYY-MM-DD)</Text>
+          <Text style={styles.label}>{t.dueDateLabel}</Text>
           <TextInput
             style={styles.input}
             placeholder="2026-10-15"
@@ -184,7 +188,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
       {/* Action Buttons */}
       <View style={styles.buttonRow}>
         <TouchableOpacity style={styles.cancelButton} onPress={onClose} disabled={isSubmitting}>
-          <Text style={styles.cancelText}>Cancel</Text>
+          <Text style={styles.cancelText}>{t.cancel}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -197,12 +201,12 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
           ) : (
             <>
               <Ionicons
-                name={isEditing ? 'checkmark-circle-outline' : 'add-circle-outline'}
+                name={isEditing ? 'checkmark-circle-outline' : 'sparkles'}
                 size={18}
                 color="#FFFFFF"
                 style={{ marginRight: 6 }}
               />
-              <Text style={styles.submitText}>{isEditing ? 'Save Changes' : 'Create Task'}</Text>
+              <Text style={styles.submitText}>{isEditing ? t.saveChanges : t.createTaskBtn}</Text>
             </>
           )}
         </TouchableOpacity>

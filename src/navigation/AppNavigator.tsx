@@ -7,6 +7,7 @@ import { HomeScreen } from '../screens/HomeScreen';
 import { TeamsScreen } from '../screens/TeamsScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useLanguage } from '../context/LanguageContext';
 import { Colors } from '../constants/theme';
 
 export type RootTabParamList = {
@@ -19,6 +20,7 @@ const Tab = createBottomTabNavigator<RootTabParamList>();
 
 export const AppNavigator: React.FC = () => {
   const insets = useSafeAreaInsets();
+  const { t } = useLanguage();
   const bottomPadding = Math.max(insets.bottom, 12);
   const barHeight = 56 + bottomPadding;
 
@@ -68,24 +70,24 @@ export const AppNavigator: React.FC = () => {
           name="Home"
           component={HomeScreen}
           options={{
-            title: 'Nhiệm vụ 🌸',
-            headerTitle: 'Axolotl Tasks 🌸',
+            title: t.tabTasks,
+            headerTitle: t.appName,
           }}
         />
         <Tab.Screen
           name="Teams"
           component={TeamsScreen}
           options={{
-            title: 'Đội ngũ 🎀',
-            headerTitle: 'Biệt Đội Axolotl',
+            title: t.tabTeams,
+            headerTitle: t.teamsTitle,
           }}
         />
         <Tab.Screen
           name="Profile"
           component={ProfileScreen}
           options={{
-            title: 'Hồ sơ 💖',
-            headerTitle: 'Hồ Sơ Axolotl',
+            title: t.tabProfile,
+            headerTitle: t.profileTitle,
           }}
         />
       </Tab.Navigator>

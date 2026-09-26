@@ -3,24 +3,27 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { AxolotlLogo } from '../components/AxolotlLogo';
+import { useLanguage } from '../context/LanguageContext';
 import { Colors, Spacing, Radius } from '../constants/theme';
 
 export const TeamsScreen: React.FC = () => {
+  const { t } = useLanguage();
+
   const upcomingFeatures = [
     {
       icon: 'people-outline' as const,
-      title: 'Không gian làm việc chung',
-      description: 'Cộng tác cùng đồng đội trong thời gian thực trên nhiều dự án dễ thương.',
+      title: t.featWorkspaceTitle,
+      description: t.featWorkspaceDesc,
     },
     {
       icon: 'person-add-outline' as const,
-      title: 'Phân công nhiệm vụ',
-      description: 'Giao việc trực tiếp cho các thành viên thông qua trường assigneeId.',
+      title: t.featAssignTitle,
+      description: t.featAssignDesc,
     },
     {
       icon: 'sparkles-outline' as const,
-      title: 'Phân quyền linh hoạt',
-      description: 'Quản trị nhóm và bảo mật phân quyền thông minh cho tổ chức.',
+      title: t.featPermsTitle,
+      description: t.featPermsDesc,
     },
   ];
 
@@ -32,17 +35,14 @@ export const TeamsScreen: React.FC = () => {
         </View>
 
         <View style={styles.badge}>
-          <Text style={styles.badgeText}>Milestone Preview 🌸</Text>
+          <Text style={styles.badgeText}>{t.teamsMilestone}</Text>
         </View>
 
-        <Text style={styles.title}>Biệt Đội Axolotl & Cộng Tác</Text>
-        <Text style={styles.subtitle}>
-          Tính năng hợp tác nhóm theo phong cách Axolotl ngọt ngào (Practical Exam 2).
-          Data model Firestore đã có sẵn teamId và assigneeId!
-        </Text>
+        <Text style={styles.title}>{t.teamsTitle}</Text>
+        <Text style={styles.subtitle}>{t.teamsSubtitle}</Text>
 
         <View style={styles.card}>
-          <Text style={styles.cardHeader}>Upcoming Features in Exam 2</Text>
+          <Text style={styles.cardHeader}>{t.teamsMilestone}</Text>
           {upcomingFeatures.map((feat, idx) => (
             <View key={idx} style={styles.featureItem}>
               <View style={styles.featIconBox}>

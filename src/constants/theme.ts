@@ -1,32 +1,33 @@
 export const Colors = {
-  // Cute Pink Axolotl Palette
-  primary: '#F43F5E', // Strawberry Axolotl Pink
-  primaryLight: '#FFF1F2', // Soft Milk Rose
+  // Cotton Candy Clouds & Soft Pink Marshmallow Palette
+  primary: '#F43F5E', // Sweet Strawberry Pink
+  primaryLight: '#FFF1F2', // Fluffy Milk Rose
   primaryDark: '#BE123C', // Deep Berry Rose
-  accent: '#FB7185', // Coral Blossom Pink
-  accentSoft: '#FFE4E6', // Pastel Marshmallow Pink
-  background: '#FFF5F7', // Softest Baby Pink
-  surface: '#FFFFFF',
-  surfaceVariant: '#FFE4E6', // Frosted Strawberry Milk
-  border: '#FECDD3', // Delicate Pink Border
-  textPrimary: '#881337', // Deep Raspberry
-  textSecondary: '#E11D48', // Sweet Rose
-  textMuted: '#FDA4AF', // Soft Blush
+  accent: '#FB7185', // Soft Coral Blossom
+  accentSoft: '#FFE4E6', // Marshmallow Puff
+  background: '#FFF5F8', // Airy Cotton Candy Sky
+  surface: '#FFFFFF', // Pure White Cloud
+  surfaceVariant: '#FFF0F5', // Soft Frosted Marshmallow
+  border: '#FCE7F3', // Delicate Pastel Cloud Border
+  borderHighlight: '#FBCFE8', // Soft Glow Border
+  textPrimary: '#701A75', // Deep Plum Berry - gentle on the eyes & clear
+  textSecondary: '#BE185D', // Sweet Rose
+  textMuted: '#9CA3AF', // Gentle Mist
 
-  // Status colors - Cute Pastel Sweets
-  statusTodo: '#EC4899', // Cotton Candy Pink
+  // Status colors - Pastel Sweets
+  statusTodo: '#EC4899', // Cotton Candy
   statusTodoBg: '#FDF2F8',
-  statusInProgress: '#F59E0B', // Honey Peach
+  statusInProgress: '#F59E0B', // Honey Cloud
   statusInProgressBg: '#FEF3C7',
-  statusCompleted: '#10B981', // Mint Macaron
+  statusCompleted: '#10B981', // Mint Marshmallow
   statusCompletedBg: '#ECFDF5',
 
-  // Priority colors - Soft Cute Badges
-  priorityHigh: '#E11D48', // Strawberry Red
+  // Priority colors - Soft Macaron Badges
+  priorityHigh: '#E11D48', // Strawberry
   priorityHighBg: '#FFE4E6',
-  priorityMed: '#A855F7', // Lavender Sweet
+  priorityMed: '#A855F7', // Lavender Puff
   priorityMedBg: '#F3E8FF',
-  priorityLow: '#06B6D4', // Pastel Aqua
+  priorityLow: '#06B6D4', // Pastel Sky
   priorityLowBg: '#ECFEFF',
 
   danger: '#F43F5E',
@@ -43,9 +44,9 @@ export const Spacing = {
 };
 
 export const Radius = {
-  sm: 10,
-  md: 16,
-  lg: 22,
-  xl: 28,
+  sm: 14,
+  md: 20,
+  lg: 26,
+  xl: 34,
   full: 9999,
 };

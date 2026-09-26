@@ -19,6 +19,7 @@ import { TaskModal } from '../components/TaskModal';
 import { FilterTabs } from '../components/FilterTabs';
 import { EmptyState } from '../components/EmptyState';
 import { AxolotlLogo } from '../components/AxolotlLogo';
+import { useLanguage } from '../context/LanguageContext';
 import { Colors, Spacing, Radius } from '../constants/theme';
 
 export const HomeScreen: React.FC = () => {
@@ -40,6 +41,7 @@ export const HomeScreen: React.FC = () => {
     removeTask,
   } = useTasks();
 
+  const { t, language, toggleLanguage } = useLanguage();
   const [modalVisible, setModalVisible] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
 
@@ -82,21 +84,36 @@ export const HomeScreen: React.FC = () => {
     <View style={[styles.headerContainer, isTablet && styles.tabletContainer]}>
       {/* Intro Header */}
       <View style={styles.introCard}>
+        {/* Language Switcher Bar */}
+        <View style={styles.langBar}>
+          <View style={styles.cloudBadge}>
+            <Text style={styles.cloudBadgeText}>☁️ Marshmallow Edition</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.langToggleBtn}
+            onPress={toggleLanguage}
+            activeOpacity={0.8}
+            accessibilityLabel="Switch language"
+          >
+            <Text style={styles.langToggleText}>
+              {language === 'en' ? '🇬🇧 EN' : '🇻🇳 VI'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.introTop}>
           <AxolotlLogo size={52} />
           <View style={[styles.introTextBox, { marginLeft: Spacing.md }]}>
-            <Text style={styles.appName}>Axolotl Tasks 🌸</Text>
-            <Text style={styles.appDescription}>
-              Quản lý công việc ngọt ngào cùng bé Axolotl hồng
-            </Text>
+            <Text style={styles.appName}>{t.appName}</Text>
+            <Text style={styles.appDescription}>{t.appSubtitle}</Text>
           </View>
           <TouchableOpacity
             style={styles.headerAddBtn}
             onPress={handleOpenCreateModal}
             activeOpacity={0.8}
           >
-            <Ionicons name="create-outline" size={17} color="#FFFFFF" />
-            <Text style={styles.headerAddText}>Thêm việc</Text>
+            <Ionicons name="sparkles" size={15} color="#FFFFFF" style={{ marginRight: 4 }} />
+            <Text style={styles.headerAddText}>{t.newTask}</Text>
           </TouchableOpacity>
         </View>
 
@@ -104,26 +121,26 @@ export const HomeScreen: React.FC = () => {
         <View style={styles.statsRow}>
           <View style={styles.statBox}>
             <Text style={styles.statNumber}>{counts.all}</Text>
-            <Text style={styles.statLabel}>Total</Text>
+            <Text style={styles.statLabel}>{t.total}</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statBox}>
             <Text style={[styles.statNumber, { color: Colors.statusTodo }]}>{counts.todo}</Text>
-            <Text style={styles.statLabel}>To Do</Text>
+            <Text style={styles.statLabel}>{t.todo}</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statBox}>
             <Text style={[styles.statNumber, { color: Colors.statusInProgress }]}>
               {counts.inProgress}
             </Text>
-            <Text style={styles.statLabel}>In Progress</Text>
+            <Text style={styles.statLabel}>{t.inProgress}</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statBox}>
             <Text style={[styles.statNumber, { color: Colors.statusCompleted }]}>
               {counts.completed}
             </Text>
-            <Text style={styles.statLabel}>Done</Text>
+            <Text style={styles.statLabel}>{t.done}</Text>
           </View>
         </View>
       </View>
@@ -133,7 +150,7 @@ export const HomeScreen: React.FC = () => {
         <Ionicons name="search" size={18} color={Colors.textMuted} style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
-          placeholder="Search tasks by title or details..."
+          placeholder={t.searchPlaceholder}
           placeholderTextColor={Colors.textMuted}
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -154,7 +171,14 @@ export const HomeScreen: React.FC = () => {
 
       <View style={styles.sectionHeaderRow}>
         <Text style={styles.sectionTitle}>
-          {selectedFilter === 'All' ? 'All Tasks' : `${selectedFilter} Tasks`} ({tasks.length})
+          {selectedFilter === 'All'
+            ? t.allTasks
+            : selectedFilter === 'To Do'
+              ? t.todoTasks
+              : selectedFilter === 'In Progress'
+                ? t.inProgressTasks
+                : t.completedTasks}{' '}
+          ({tasks.length})
         </Text>
       </View>
     </View>
@@ -187,11 +211,11 @@ export const HomeScreen: React.FC = () => {
               <EmptyState
                 message={
                   searchQuery
-                    ? `No tasks matching "${searchQuery}"`
-                    : `No tasks found under "${selectedFilter}" status.`
+                    ? `${t.emptyFilterMsg}: "${searchQuery}"`
+                    : `${t.emptyFilterMsg} "${selectedFilter}".`
                 }
                 onAction={handleOpenCreateModal}
-                actionLabel="Create Task Now"
+                actionLabel={t.newTask}
               />
             }
             refreshControl={
@@ -261,27 +285,55 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.md,
   },
   introCard: {
-    backgroundColor: Colors.surface,
+    backgroundColor: '#FFFFFF',
     marginHorizontal: Spacing.lg,
-    borderRadius: Radius.lg,
+    borderRadius: Radius.xl,
     padding: Spacing.lg,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    borderWidth: 1.5,
+    borderColor: '#FCE7F3',
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 3,
     marginBottom: Spacing.md,
+  },
+  langBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Spacing.md,
+  },
+  cloudBadge: {
+    backgroundColor: '#FFF1F2',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: Radius.full,
+    borderWidth: 1,
+    borderColor: '#FCE7F3',
+  },
+  cloudBadgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: Colors.primary,
+  },
+  langToggleBtn: {
+    backgroundColor: '#FFE4E6',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: Radius.full,
+    borderWidth: 1,
+    borderColor: '#FDA4AF',
+  },
+  langToggleText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: Colors.primaryDark,
   },
   introTop: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: Spacing.md,
-  },
-  brandIconBox: {
-    width: 44,
-    height: 44,
-    borderRadius: Radius.md,
-    backgroundColor: Colors.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: Spacing.md,
   },
   introTextBox: {
     flex: 1,

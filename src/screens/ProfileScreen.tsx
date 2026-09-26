@@ -3,10 +3,12 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { AxolotlLogo } from '../components/AxolotlLogo';
+import { useLanguage } from '../context/LanguageContext';
 import { Colors, Spacing, Radius } from '../constants/theme';
 import { isFirebaseConfigured } from '../services/firebaseConfig';
 
 export const ProfileScreen: React.FC = () => {
+  const { t } = useLanguage();
   const firebaseConnected = isFirebaseConfigured();
 
   return (
@@ -17,22 +19,22 @@ export const ProfileScreen: React.FC = () => {
           <View style={{ marginBottom: Spacing.md }}>
             <AxolotlLogo size={80} />
           </View>
-          <Text style={styles.userName}>Nguyen Tuong Vy (Axolotl Pink 🌸✨)</Text>
-          <Text style={styles.userRole}>Practical Exam 1 – Mode: Public CRUD</Text>
+          <Text style={styles.userName}>{t.profileTitle}</Text>
+          <Text style={styles.userRole}>{t.profileRole}</Text>
 
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>Axolotl Sweet Edition 💖</Text>
+            <Text style={styles.badgeText}>{t.profileTag}</Text>
           </View>
         </View>
 
         {/* Database & App Info */}
         <View style={styles.infoCard}>
-          <Text style={styles.sectionTitle}>System & Database Status</Text>
+          <Text style={styles.sectionTitle}>{t.profileSystem}</Text>
 
           <View style={styles.infoRow}>
             <View style={styles.infoLabelGroup}>
               <Ionicons name="cloud-outline" size={18} color={Colors.primary} />
-              <Text style={styles.infoLabel}>Database</Text>
+              <Text style={styles.infoLabel}>{t.profileDb}</Text>
             </View>
             <Text
               style={[
@@ -40,16 +42,16 @@ export const ProfileScreen: React.FC = () => {
                 { color: firebaseConnected ? Colors.success : Colors.statusInProgress },
               ]}
             >
-              {firebaseConnected ? 'Firestore Connected' : 'Ready / Test Mode'}
+              {firebaseConnected ? t.profileConnected : 'Ready / Test Mode'}
             </Text>
           </View>
 
           <View style={styles.infoRow}>
             <View style={styles.infoLabelGroup}>
               <Ionicons name="shield-outline" size={18} color={Colors.primary} />
-              <Text style={styles.infoLabel}>Authentication</Text>
+              <Text style={styles.infoLabel}>{t.profileAuth}</Text>
             </View>
-            <Text style={styles.infoValue}>Public (Unlocked for Exam 1)</Text>
+            <Text style={styles.infoValue}>{t.profilePublic}</Text>
           </View>
 
           <View style={styles.infoRow}>

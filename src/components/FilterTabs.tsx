@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { TaskStatus } from '../types/task';
+import { useLanguage } from '../context/LanguageContext';
 import { Colors, Spacing, Radius } from '../constants/theme';
 
 interface FilterTabsProps {
@@ -19,11 +20,13 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
   onSelectFilter,
   counts,
 }) => {
+  const { t } = useLanguage();
+
   const tabs: { key: 'All' | TaskStatus; label: string; count: number }[] = [
-    { key: 'All', label: 'All', count: counts.all },
-    { key: 'To Do', label: 'To Do', count: counts.todo },
-    { key: 'In Progress', label: 'In Progress', count: counts.inProgress },
-    { key: 'Completed', label: 'Completed', count: counts.completed },
+    { key: 'All', label: t.allTasks, count: counts.all },
+    { key: 'To Do', label: t.todo, count: counts.todo },
+    { key: 'In Progress', label: t.inProgress, count: counts.inProgress },
+    { key: 'Completed', label: t.done, count: counts.completed },
   ];
 
   return (

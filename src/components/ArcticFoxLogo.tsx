@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Colors, Radius } from '../constants/theme';
+import { Radius } from '../constants/theme';
 
 interface ArcticFoxLogoProps {
   size?: number;
