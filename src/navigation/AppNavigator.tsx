@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { HomeScreen } from '../screens/HomeScreen';
 import { TeamsScreen } from '../screens/TeamsScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '../constants/theme';
 
 export type RootTabParamList = {
@@ -17,6 +18,10 @@ export type RootTabParamList = {
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
 export const AppNavigator: React.FC = () => {
+  const insets = useSafeAreaInsets();
+  const bottomPadding = Math.max(insets.bottom, 12);
+  const barHeight = 56 + bottomPadding;
+
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -34,7 +39,13 @@ export const AppNavigator: React.FC = () => {
             fontWeight: '700',
             color: Colors.textPrimary,
           },
-          tabBarStyle: styles.tabBar,
+          tabBarStyle: [
+            styles.tabBar,
+            {
+              height: barHeight,
+              paddingBottom: bottomPadding,
+            },
+          ],
           tabBarActiveTintColor: Colors.primary,
           tabBarInactiveTintColor: Colors.textMuted,
           tabBarLabelStyle: styles.tabBarLabel,
@@ -87,9 +98,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
     borderTopWidth: 1,
     borderTopColor: Colors.border,
-    height: 60,
-    paddingBottom: 8,
-    paddingTop: 6,
+    paddingTop: 8,
   },
   tabBarLabel: {
     fontSize: 11,
