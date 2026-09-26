@@ -95,8 +95,8 @@ export const HomeScreen: React.FC = () => {
             onPress={handleOpenCreateModal}
             activeOpacity={0.8}
           >
-            <Ionicons name="add" size={20} color="#FFFFFF" />
-            <Text style={styles.headerAddText}>+ Tạo mới</Text>
+            <Ionicons name="create-outline" size={17} color="#FFFFFF" />
+            <Text style={styles.headerAddText}>Thêm việc</Text>
           </TouchableOpacity>
         </View>
 
