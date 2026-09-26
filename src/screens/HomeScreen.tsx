@@ -20,7 +20,7 @@ import { FilterTabs } from '../components/FilterTabs';
 import { EmptyState } from '../components/EmptyState';
 import { AxolotlLogo } from '../components/AxolotlLogo';
 import { useLanguage } from '../context/LanguageContext';
-import { Colors, Spacing, Radius } from '../constants/theme';
+import { Colors, Spacing, Radius, Shadows } from '../constants/theme';
 
 export const HomeScreen: React.FC = () => {
   const { width } = useWindowDimensions();
@@ -82,71 +82,93 @@ export const HomeScreen: React.FC = () => {
 
   const renderHeader = () => (
     <View style={[styles.headerContainer, isTablet && styles.tabletContainer]}>
-      {/* Intro Header */}
-      <View style={styles.introCard}>
-        {/* Language Switcher Bar */}
-        <View style={styles.langBar}>
-          <View style={styles.cloudBadge}>
-            <Text style={styles.cloudBadgeText}>☁️ Marshmallow Edition</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.langToggleBtn}
-            onPress={toggleLanguage}
-            activeOpacity={0.8}
-            accessibilityLabel="Switch language"
-          >
-            <Text style={styles.langToggleText}>
-              {language === 'en' ? '🇬🇧 EN' : '🇻🇳 VI'}
+      {/* Top Executive Dashboard Card */}
+      <View style={styles.dashboardCard}>
+        {/* App Branding & Language Switcher */}
+        <View style={styles.topRow}>
+          <AxolotlLogo size={46} showOnlineBadge={true} />
+          <View style={styles.brandInfo}>
+            <View style={styles.titleRow}>
+              <Text style={styles.brandName}>{t.appName}</Text>
+              <View style={styles.liveBadge}>
+                <View style={styles.liveDot} />
+                <Text style={styles.liveText}>LIVE</Text>
+              </View>
+            </View>
+            <Text style={styles.brandSubtitle} numberOfLines={1}>
+              {t.appSubtitle}
             </Text>
-          </TouchableOpacity>
+          </View>
+
+          {/* Segmented EN / VI Toggle */}
+          <View style={styles.langSegment}>
+            <TouchableOpacity
+              style={[styles.langBtn, language === 'en' && styles.langBtnActive]}
+              onPress={() => language !== 'en' && toggleLanguage()}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.langText, language === 'en' && styles.langTextActive]}>
+                EN
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.langBtn, language === 'vi' && styles.langBtnActive]}
+              onPress={() => language !== 'vi' && toggleLanguage()}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.langText, language === 'vi' && styles.langTextActive]}>
+                VI
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        <View style={styles.introTop}>
-          <AxolotlLogo size={52} />
-          <View style={[styles.introTextBox, { marginLeft: Spacing.md }]}>
-            <Text style={styles.appName}>{t.appName}</Text>
-            <Text style={styles.appDescription}>{t.appSubtitle}</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.headerAddBtn}
-            onPress={handleOpenCreateModal}
-            activeOpacity={0.8}
-          >
-            <Ionicons name="sparkles" size={15} color="#FFFFFF" style={{ marginRight: 4 }} />
-            <Text style={styles.headerAddText}>{t.newTask}</Text>
-          </TouchableOpacity>
-        </View>
+        {/* Primary Action Button */}
+        <TouchableOpacity
+          style={styles.primaryAddBtn}
+          onPress={handleOpenCreateModal}
+          activeOpacity={0.85}
+        >
+          <Ionicons name="add-circle" size={20} color="#FFFFFF" style={{ marginRight: 6 }} />
+          <Text style={styles.primaryAddText}>{t.newTask}</Text>
+        </TouchableOpacity>
 
-        {/* Quick Stats Banner */}
-        <View style={styles.statsRow}>
-          <View style={styles.statBox}>
-            <Text style={styles.statNumber}>{counts.all}</Text>
-            <Text style={styles.statLabel}>{t.total}</Text>
+        {/* KPI Metrics Strip */}
+        <View style={styles.metricsContainer}>
+          <View style={styles.metricItem}>
+            <Text style={styles.metricNumber}>{counts.all}</Text>
+            <Text style={styles.metricLabel}>{t.total}</Text>
           </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statBox}>
-            <Text style={[styles.statNumber, { color: Colors.statusTodo }]}>{counts.todo}</Text>
-            <Text style={styles.statLabel}>{t.todo}</Text>
+
+          <View style={styles.metricDivider} />
+
+          <View style={styles.metricItem}>
+            <Text style={[styles.metricNumber, { color: Colors.statusTodo }]}>{counts.todo}</Text>
+            <Text style={styles.metricLabel}>{t.todo}</Text>
           </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statBox}>
-            <Text style={[styles.statNumber, { color: Colors.statusInProgress }]}>
+
+          <View style={styles.metricDivider} />
+
+          <View style={styles.metricItem}>
+            <Text style={[styles.metricNumber, { color: Colors.statusInProgress }]}>
               {counts.inProgress}
             </Text>
-            <Text style={styles.statLabel}>{t.inProgress}</Text>
+            <Text style={styles.metricLabel}>{t.inProgress}</Text>
           </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statBox}>
-            <Text style={[styles.statNumber, { color: Colors.statusCompleted }]}>
+
+          <View style={styles.metricDivider} />
+
+          <View style={styles.metricItem}>
+            <Text style={[styles.metricNumber, { color: Colors.statusCompleted }]}>
               {counts.completed}
             </Text>
-            <Text style={styles.statLabel}>{t.done}</Text>
+            <Text style={styles.metricLabel}>{t.done}</Text>
           </View>
         </View>
       </View>
 
-      {/* Search Bar */}
-      <View style={styles.searchWrapper}>
+      {/* Spotlight Search Bar */}
+      <View style={styles.searchBar}>
         <Ionicons name="search" size={18} color={Colors.textMuted} style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
@@ -156,7 +178,7 @@ export const HomeScreen: React.FC = () => {
           onChangeText={setSearchQuery}
         />
         {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => setSearchQuery('')} style={styles.clearSearchBtn}>
+          <TouchableOpacity onPress={() => setSearchQuery('')} style={styles.clearBtn} activeOpacity={0.7}>
             <Ionicons name="close-circle" size={18} color={Colors.textMuted} />
           </TouchableOpacity>
         )}
@@ -169,7 +191,8 @@ export const HomeScreen: React.FC = () => {
         counts={counts}
       />
 
-      <View style={styles.sectionHeaderRow}>
+      {/* Section Header */}
+      <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>
           {selectedFilter === 'All'
             ? t.allTasks
@@ -177,9 +200,11 @@ export const HomeScreen: React.FC = () => {
               ? t.todoTasks
               : selectedFilter === 'In Progress'
                 ? t.inProgressTasks
-                : t.completedTasks}{' '}
-          ({tasks.length})
+                : t.completedTasks}
         </Text>
+        <View style={styles.countBadge}>
+          <Text style={styles.countBadgeText}>{tasks.length}</Text>
+        </View>
       </View>
     </View>
   );
@@ -284,114 +309,140 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingTop: Spacing.md,
   },
-  introCard: {
-    backgroundColor: '#FFFFFF',
+  dashboardCard: {
+    backgroundColor: Colors.surface,
     marginHorizontal: Spacing.lg,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.lg,
     padding: Spacing.lg,
-    borderWidth: 1.5,
-    borderColor: '#FCE7F3',
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 3,
-    marginBottom: Spacing.md,
-  },
-  langBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: Spacing.md,
-  },
-  cloudBadge: {
-    backgroundColor: '#FFF1F2',
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: Radius.full,
     borderWidth: 1,
-    borderColor: '#FCE7F3',
+    borderColor: Colors.border,
+    marginBottom: Spacing.md,
+    ...Shadows.card,
   },
-  cloudBadgeText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: Colors.primary,
-  },
-  langToggleBtn: {
-    backgroundColor: '#FFE4E6',
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: Radius.full,
-    borderWidth: 1,
-    borderColor: '#FDA4AF',
-  },
-  langToggleText: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: Colors.primaryDark,
-  },
-  introTop: {
+  topRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: Spacing.md,
   },
-  introTextBox: {
+  brandInfo: {
     flex: 1,
+    marginLeft: Spacing.md,
   },
-  appName: {
-    fontSize: 18,
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  brandName: {
+    fontSize: 17,
     fontWeight: '800',
     color: Colors.textPrimary,
+    letterSpacing: -0.3,
   },
-  appDescription: {
+  liveBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.successBg,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: Radius.full,
+    gap: 4,
+  },
+  liveDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: Colors.success,
+  },
+  liveText: {
+    fontSize: 9,
+    fontWeight: '800',
+    color: Colors.success,
+    letterSpacing: 0.4,
+  },
+  brandSubtitle: {
     fontSize: 12,
     color: Colors.textSecondary,
     marginTop: 2,
-    lineHeight: 16,
   },
-  headerAddBtn: {
+  langSegment: {
+    flexDirection: 'row',
+    backgroundColor: Colors.surfaceVariant,
+    borderRadius: Radius.sm,
+    padding: 2,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  langBtn: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  langBtnActive: {
+    backgroundColor: Colors.surface,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  langText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: Colors.textMuted,
+  },
+  langTextActive: {
+    color: Colors.primary,
+    fontWeight: '800',
+  },
+  primaryAddBtn: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: Colors.primary,
-    paddingVertical: 7,
-    paddingHorizontal: 12,
+    paddingVertical: 11,
+    paddingHorizontal: Spacing.lg,
     borderRadius: Radius.md,
-    gap: 4,
+    marginBottom: Spacing.md,
+    ...Shadows.button,
   },
-  headerAddText: {
+  primaryAddText: {
     color: '#FFFFFF',
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: 14,
+    fontWeight: '700',
+    letterSpacing: 0.2,
   },
-  statsRow: {
+  metricsContainer: {
     flexDirection: 'row',
     backgroundColor: Colors.surfaceVariant,
     borderRadius: Radius.md,
-    paddingVertical: Spacing.sm,
+    paddingVertical: Spacing.sm + 2,
     paddingHorizontal: Spacing.sm,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
-  statBox: {
+  metricItem: {
     flex: 1,
     alignItems: 'center',
   },
-  statNumber: {
+  metricNumber: {
     fontSize: 16,
     fontWeight: '800',
     color: Colors.textPrimary,
   },
-  statLabel: {
+  metricLabel: {
     fontSize: 11,
     color: Colors.textSecondary,
     marginTop: 2,
-    fontWeight: '500',
+    fontWeight: '600',
   },
-  statDivider: {
+  metricDivider: {
     width: 1,
-    height: 24,
+    height: 22,
     backgroundColor: Colors.border,
   },
-  searchWrapper: {
+  searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.surface,
@@ -402,6 +453,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     height: 44,
     marginBottom: Spacing.xs,
+    ...Shadows.card,
   },
   searchIcon: {
     marginRight: Spacing.sm,
@@ -411,22 +463,35 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.textPrimary,
   },
-  clearSearchBtn: {
+  clearBtn: {
     padding: 4,
   },
-  sectionHeaderRow: {
+  sectionHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.sm,
   },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '700',
     color: Colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
+  },
+  countBadge: {
+    backgroundColor: Colors.surfaceVariant,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: Radius.full,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  countBadgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: Colors.textPrimary,
   },
   fab: {
     position: 'absolute',
@@ -438,10 +503,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
-    elevation: 6,
+    ...Shadows.button,
   },
 });

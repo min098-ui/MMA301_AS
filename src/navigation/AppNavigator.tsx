@@ -21,26 +21,14 @@ const Tab = createBottomTabNavigator<RootTabParamList>();
 export const AppNavigator: React.FC = () => {
   const insets = useSafeAreaInsets();
   const { t } = useLanguage();
-  const bottomPadding = Math.max(insets.bottom, 12);
-  const barHeight = 56 + bottomPadding;
+  const bottomPadding = Math.max(insets.bottom, 10);
+  const barHeight = 58 + bottomPadding;
 
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          headerShown: true,
-          headerStyle: {
-            backgroundColor: Colors.surface,
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 1,
-            borderBottomColor: Colors.border,
-          },
-          headerTitleStyle: {
-            fontSize: 18,
-            fontWeight: '700',
-            color: Colors.textPrimary,
-          },
+          headerShown: false,
           tabBarStyle: [
             styles.tabBar,
             {
@@ -71,7 +59,6 @@ export const AppNavigator: React.FC = () => {
           component={HomeScreen}
           options={{
             title: t.tabTasks,
-            headerTitle: t.appName,
           }}
         />
         <Tab.Screen
@@ -79,7 +66,6 @@ export const AppNavigator: React.FC = () => {
           component={TeamsScreen}
           options={{
             title: t.tabTeams,
-            headerTitle: t.teamsTitle,
           }}
         />
         <Tab.Screen
@@ -87,7 +73,6 @@ export const AppNavigator: React.FC = () => {
           component={ProfileScreen}
           options={{
             title: t.tabProfile,
-            headerTitle: t.profileTitle,
           }}
         />
       </Tab.Navigator>
@@ -100,10 +85,16 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
     borderTopWidth: 1,
     borderTopColor: Colors.border,
-    paddingTop: 8,
+    paddingTop: 6,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    elevation: 4,
   },
   tabBarLabel: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: '700',
+    marginTop: 2,
   },
 });

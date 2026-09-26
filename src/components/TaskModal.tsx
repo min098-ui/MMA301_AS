@@ -14,7 +14,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Task, TaskStatus, TaskPriority, CreateTaskInput, UpdateTaskInput } from '../types/task';
 import { useLanguage } from '../context/LanguageContext';
-import { Colors, Spacing, Radius } from '../constants/theme';
+import { Colors, Spacing, Radius, Shadows } from '../constants/theme';
 
 interface TaskModalProps {
   visible: boolean;
@@ -80,21 +80,58 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
     }
   };
 
-  const statuses: TaskStatus[] = ['To Do', 'In Progress', 'Completed'];
-  const priorities: TaskPriority[] = ['Low', 'Medium', 'High'];
+  const statuses: { key: TaskStatus; label: string; activeColor: string; activeBg: string }[] = [
+    { key: 'To Do', label: t.todo, activeColor: Colors.statusTodo, activeBg: Colors.statusTodoBg },
+    {
+      key: 'In Progress',
+      label: t.inProgress,
+      activeColor: Colors.statusInProgress,
+      activeBg: Colors.statusInProgressBg,
+    },
+    {
+      key: 'Completed',
+      label: t.done,
+      activeColor: Colors.statusCompleted,
+      activeBg: Colors.statusCompletedBg,
+    },
+  ];
+
+  const priorities: {
+    key: TaskPriority;
+    label: string;
+    activeColor: string;
+    activeBg: string;
+  }[] = [
+    { key: 'Low', label: t.prioLow, activeColor: Colors.priorityLow, activeBg: Colors.priorityLowBg },
+    {
+      key: 'Medium',
+      label: t.prioMed,
+      activeColor: Colors.priorityMed,
+      activeBg: Colors.priorityMedBg,
+    },
+    {
+      key: 'High',
+      label: t.prioHigh,
+      activeColor: Colors.priorityHigh,
+      activeBg: Colors.priorityHighBg,
+    },
+  ];
 
   return (
     <View style={styles.modalContainer}>
+      {/* Top Handle Bar */}
+      <View style={styles.dragHandle} />
+
       {/* Header */}
       <View style={styles.modalHeader}>
-        <View>
+        <View style={{ flex: 1 }}>
           <Text style={styles.modalTitle}>{isEditing ? t.editTaskTitle : t.createTaskTitle}</Text>
           <Text style={styles.modalSubtitle}>
             {isEditing ? t.editTaskSubtitle : t.createTaskSubtitle}
           </Text>
         </View>
-        <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-          <Ionicons name="close" size={22} color={Colors.textSecondary} />
+        <TouchableOpacity onPress={onClose} style={styles.closeBtn} activeOpacity={0.7}>
+          <Ionicons name="close" size={20} color={Colors.textSecondary} />
         </TouchableOpacity>
       </View>
 
@@ -106,7 +143,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
           </Text>
           <TextInput
             style={[styles.input, Boolean(titleError) && styles.inputError]}
-            placeholder="e.g. Implement user profile"
+            placeholder="e.g. Design UI / Refactor Firestore CRUD"
             placeholderTextColor={Colors.textMuted}
             value={title}
             onChangeText={(text) => {
@@ -122,7 +159,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
           <Text style={styles.label}>{t.descLabel}</Text>
           <TextInput
             style={[styles.input, styles.textArea]}
-            placeholder="Add context, acceptance criteria, or notes..."
+            placeholder="Add context, acceptance criteria, or technical details..."
             placeholderTextColor={Colors.textMuted}
             value={description}
             onChangeText={setDescription}
@@ -136,15 +173,37 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
         <View style={styles.inputGroup}>
           <Text style={styles.label}>{t.statusLabel}</Text>
           <View style={styles.pillRow}>
-            {statuses.map((s) => {
-              const active = status === s;
+            {statuses.map((item) => {
+              const active = status === item.key;
               return (
                 <TouchableOpacity
-                  key={s}
-                  style={[styles.pill, active && styles.activePill]}
-                  onPress={() => setStatus(s)}
+                  key={item.key}
+                  style={[
+                    styles.segmentedPill,
+                    active && {
+                      backgroundColor: item.activeBg,
+                      borderColor: item.activeColor,
+                    },
+                  ]}
+                  onPress={() => setStatus(item.key)}
+                  activeOpacity={0.7}
                 >
-                  <Text style={[styles.pillText, active && styles.activePillText]}>{s}</Text>
+                  {active && (
+                    <Ionicons
+                      name="checkmark-circle"
+                      size={14}
+                      color={item.activeColor}
+                      style={{ marginRight: 4 }}
+                    />
+                  )}
+                  <Text
+                    style={[
+                      styles.segmentedPillText,
+                      active && { color: item.activeColor, fontWeight: '700' },
+                    ]}
+                  >
+                    {item.label}
+                  </Text>
                 </TouchableOpacity>
               );
             })}
@@ -155,16 +214,34 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
         <View style={styles.inputGroup}>
           <Text style={styles.label}>{t.priorityLabel}</Text>
           <View style={styles.pillRow}>
-            {priorities.map((p) => {
-              const active = priority === p;
+            {priorities.map((item) => {
+              const active = priority === item.key;
               return (
                 <TouchableOpacity
-                  key={p}
-                  style={[styles.pill, active && styles.activePill]}
-                  onPress={() => setPriority(p)}
+                  key={item.key}
+                  style={[
+                    styles.segmentedPill,
+                    active && {
+                      backgroundColor: item.activeBg,
+                      borderColor: item.activeColor,
+                    },
+                  ]}
+                  onPress={() => setPriority(item.key)}
+                  activeOpacity={0.7}
                 >
-                  <Text style={[styles.pillText, active && styles.activePillText]}>
-                    {p === 'High' ? t.prioHigh : p === 'Medium' ? t.prioMed : t.prioLow}
+                  <View
+                    style={[
+                      styles.dot,
+                      { backgroundColor: active ? item.activeColor : Colors.textMuted },
+                    ]}
+                  />
+                  <Text
+                    style={[
+                      styles.segmentedPillText,
+                      active && { color: item.activeColor, fontWeight: '700' },
+                    ]}
+                  >
+                    {item.label}
                   </Text>
                 </TouchableOpacity>
               );
@@ -175,19 +252,27 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
         {/* Due Date Field */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>{t.dueDateLabel}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="2026-10-15"
-            placeholderTextColor={Colors.textMuted}
-            value={dueDate}
-            onChangeText={setDueDate}
-          />
+          <View style={styles.inputWithIcon}>
+            <Ionicons name="calendar-outline" size={18} color={Colors.textMuted} style={styles.inputIcon} />
+            <TextInput
+              style={styles.innerInput}
+              placeholder="YYYY-MM-DD"
+              placeholderTextColor={Colors.textMuted}
+              value={dueDate}
+              onChangeText={setDueDate}
+            />
+          </View>
         </View>
       </ScrollView>
 
       {/* Action Buttons */}
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.cancelButton} onPress={onClose} disabled={isSubmitting}>
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={onClose}
+          disabled={isSubmitting}
+          activeOpacity={0.7}
+        >
           <Text style={styles.cancelText}>{t.cancel}</Text>
         </TouchableOpacity>
 
@@ -195,6 +280,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
           style={[styles.submitButton, isSubmitting && styles.disabledButton]}
           onPress={handleValidateAndSubmit}
           disabled={isSubmitting}
+          activeOpacity={0.8}
         >
           {isSubmitting ? (
             <ActivityIndicator size="small" color="#FFFFFF" />
@@ -238,17 +324,26 @@ export const TaskModal: React.FC<TaskModalProps> = ({ visible, onClose, onSubmit
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(15, 23, 42, 0.55)',
+    backgroundColor: 'rgba(15, 23, 42, 0.6)',
     justifyContent: 'flex-end',
   },
   modalContainer: {
     backgroundColor: Colors.surface,
-    borderTopLeftRadius: Radius.xl,
-    borderTopRightRadius: Radius.xl,
-    paddingTop: Spacing.xl,
+    borderTopLeftRadius: Radius.xxl,
+    borderTopRightRadius: Radius.xxl,
+    paddingTop: Spacing.md,
     paddingBottom: Platform.OS === 'ios' ? 34 : Spacing.xl,
     paddingHorizontal: Spacing.xl,
-    maxHeight: '85%',
+    maxHeight: '88%',
+    ...Shadows.modal,
+  },
+  dragHandle: {
+    width: 36,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: Colors.border,
+    alignSelf: 'center',
+    marginBottom: Spacing.md,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -257,29 +352,34 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.lg,
   },
   modalTitle: {
-    fontSize: 20,
-    fontWeight: '700',
+    fontSize: 19,
+    fontWeight: '800',
     color: Colors.textPrimary,
+    letterSpacing: -0.3,
   },
   modalSubtitle: {
-    fontSize: 13,
+    fontSize: 12,
     color: Colors.textSecondary,
     marginTop: 2,
   },
   closeBtn: {
-    padding: 6,
-    borderRadius: Radius.full,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: Colors.surfaceVariant,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: Spacing.sm,
   },
   formScroll: {
-    maxHeight: 380,
+    marginBottom: Spacing.md,
   },
   inputGroup: {
     marginBottom: Spacing.md,
   },
   label: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '700',
     color: Colors.textPrimary,
     marginBottom: 6,
   },
@@ -296,62 +396,85 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.textPrimary,
   },
+  inputWithIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.surfaceVariant,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: Radius.md,
+    paddingHorizontal: Spacing.md,
+  },
+  inputIcon: {
+    marginRight: 8,
+  },
+  innerInput: {
+    flex: 1,
+    paddingVertical: 10,
+    fontSize: 14,
+    color: Colors.textPrimary,
+  },
+  textArea: {
+    minHeight: 74,
+    paddingTop: 10,
+  },
   inputError: {
     borderColor: Colors.danger,
-    backgroundColor: '#FEF2F2',
+    backgroundColor: Colors.dangerBg,
   },
   errorText: {
-    color: Colors.danger,
     fontSize: 12,
+    color: Colors.danger,
     marginTop: 4,
     fontWeight: '500',
   },
-  textArea: {
-    minHeight: 70,
-  },
   pillRow: {
     flexDirection: 'row',
-    gap: Spacing.sm,
+    gap: 8,
   },
-  pill: {
+  segmentedPill: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 9,
+    paddingHorizontal: 8,
     borderRadius: Radius.md,
     backgroundColor: Colors.surfaceVariant,
-    alignItems: 'center',
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  activePill: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
-  },
-  pillText: {
-    fontSize: 13,
+  segmentedPillText: {
+    fontSize: 12,
     fontWeight: '600',
     color: Colors.textSecondary,
   },
-  activePillText: {
-    color: '#FFFFFF',
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginRight: 6,
   },
   buttonRow: {
     flexDirection: 'row',
     gap: Spacing.md,
-    marginTop: Spacing.lg,
+    paddingTop: Spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: Colors.borderLight,
   },
   cancelButton: {
     flex: 1,
     paddingVertical: 12,
     borderRadius: Radius.md,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    backgroundColor: Colors.surfaceVariant,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   cancelText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
     color: Colors.textSecondary,
   },
   submitButton: {
@@ -362,9 +485,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
+    ...Shadows.button,
   },
   disabledButton: {
-    opacity: 0.65,
+    opacity: 0.6,
   },
   submitText: {
     fontSize: 14,

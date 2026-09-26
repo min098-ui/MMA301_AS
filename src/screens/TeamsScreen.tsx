@@ -4,24 +4,48 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { AxolotlLogo } from '../components/AxolotlLogo';
 import { useLanguage } from '../context/LanguageContext';
-import { Colors, Spacing, Radius } from '../constants/theme';
+import { Colors, Spacing, Radius, Shadows } from '../constants/theme';
 
 export const TeamsScreen: React.FC = () => {
   const { t } = useLanguage();
 
+  const mockMembers = [
+    {
+      name: 'Nguyen Tuong Vy',
+      role: 'Lead Architect',
+      status: 'Active Now',
+      color: Colors.primary,
+      icon: 'person-circle' as const,
+    },
+    {
+      name: 'Cloud Firestore Bot',
+      role: 'Realtime Sync Engine',
+      status: 'Listening onSnapshot',
+      color: Colors.accent,
+      icon: 'sync-circle' as const,
+    },
+    {
+      name: 'Team Workspace QA',
+      role: 'Exam 2 Collaborator',
+      status: 'Invited',
+      color: Colors.priorityMed,
+      icon: 'time' as const,
+    },
+  ];
+
   const upcomingFeatures = [
     {
-      icon: 'people-outline' as const,
+      icon: 'people' as const,
       title: t.featWorkspaceTitle,
       description: t.featWorkspaceDesc,
     },
     {
-      icon: 'person-add-outline' as const,
+      icon: 'person-add' as const,
       title: t.featAssignTitle,
       description: t.featAssignDesc,
     },
     {
-      icon: 'sparkles-outline' as const,
+      icon: 'shield-checkmark' as const,
       title: t.featPermsTitle,
       description: t.featPermsDesc,
     },
@@ -29,20 +53,53 @@ export const TeamsScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={{ marginTop: Spacing.lg, marginBottom: Spacing.md }}>
-          <AxolotlLogo size={80} />
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+        {/* Workspace Brand Card */}
+        <View style={styles.brandCard}>
+          <AxolotlLogo size={68} showOnlineBadge={true} />
+          <Text style={styles.title}>{t.teamsTitle}</Text>
+          <Text style={styles.subtitle}>{t.teamsSubtitle}</Text>
+
+          <View style={styles.badge}>
+            <View style={styles.liveDot} />
+            <Text style={styles.badgeText}>{t.teamsMilestone}</Text>
+          </View>
         </View>
 
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>{t.teamsMilestone}</Text>
-        </View>
-
-        <Text style={styles.title}>{t.teamsTitle}</Text>
-        <Text style={styles.subtitle}>{t.teamsSubtitle}</Text>
-
+        {/* Active Workspace Members */}
         <View style={styles.card}>
-          <Text style={styles.cardHeader}>{t.teamsMilestone}</Text>
+          <View style={styles.cardHeaderRow}>
+            <Text style={styles.cardHeader}>Workspace Members</Text>
+            <View style={styles.countChip}>
+              <Text style={styles.countChipText}>3 Members</Text>
+            </View>
+          </View>
+
+          {mockMembers.map((member, idx) => (
+            <View
+              key={idx}
+              style={[
+                styles.memberRow,
+                idx === mockMembers.length - 1 && { borderBottomWidth: 0, paddingBottom: 0 },
+              ]}
+            >
+              <View style={[styles.avatarBox, { backgroundColor: member.color + '15' }]}>
+                <Ionicons name={member.icon} size={22} color={member.color} />
+              </View>
+              <View style={styles.memberInfo}>
+                <Text style={styles.memberName}>{member.name}</Text>
+                <Text style={styles.memberRole}>{member.role}</Text>
+              </View>
+              <View style={styles.statusPill}>
+                <Text style={styles.statusPillText}>{member.status}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+
+        {/* Exam 2 Features Roadmap */}
+        <View style={styles.card}>
+          <Text style={styles.cardHeader}>{t.teamsMilestone} – Enterprise Roadmap</Text>
           {upcomingFeatures.map((feat, idx) => (
             <View key={idx} style={styles.featureItem}>
               <View style={styles.featIconBox}>
@@ -66,61 +123,137 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   container: {
+    padding: Spacing.lg,
+    alignItems: 'center',
+    paddingBottom: 40,
+  },
+  brandCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.lg,
     padding: Spacing.xl,
     alignItems: 'center',
-  },
-  iconCircle: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: Colors.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: Spacing.lg,
+    width: '100%',
+    maxWidth: 520,
+    borderWidth: 1,
+    borderColor: Colors.border,
     marginBottom: Spacing.md,
+    ...Shadows.card,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: Colors.textPrimary,
+    marginTop: Spacing.md,
+    marginBottom: 4,
+    textAlign: 'center',
+    letterSpacing: -0.3,
+  },
+  subtitle: {
+    fontSize: 13,
+    color: Colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 19,
+    marginBottom: Spacing.md,
+    maxWidth: 360,
   },
   badge: {
-    backgroundColor: Colors.surfaceVariant,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.primaryLight,
     paddingHorizontal: 12,
-    paddingVertical: 4,
+    paddingVertical: 5,
     borderRadius: Radius.full,
-    marginBottom: Spacing.sm,
+    borderWidth: 1,
+    borderColor: Colors.primarySoft,
+    gap: 6,
+  },
+  liveDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: Colors.primary,
   },
   badgeText: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '700',
     color: Colors.primary,
     textTransform: 'uppercase',
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: Colors.textPrimary,
-    marginBottom: 6,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 14,
-    color: Colors.textSecondary,
-    textAlign: 'center',
-    lineHeight: 20,
-    marginBottom: Spacing.xl,
-    maxWidth: 360,
+    letterSpacing: 0.5,
   },
   card: {
     backgroundColor: Colors.surface,
     borderRadius: Radius.lg,
     padding: Spacing.lg,
     width: '100%',
-    maxWidth: 480,
+    maxWidth: 520,
     borderWidth: 1,
     borderColor: Colors.border,
+    marginBottom: Spacing.md,
+    ...Shadows.card,
+  },
+  cardHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Spacing.md,
   },
   cardHeader: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '700',
     color: Colors.textPrimary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
     marginBottom: Spacing.md,
+  },
+  countChip: {
+    backgroundColor: Colors.surfaceVariant,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: Radius.full,
+  },
+  countChipText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: Colors.textSecondary,
+  },
+  memberRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.borderLight,
+  },
+  avatarBox: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: Spacing.md,
+  },
+  memberInfo: {
+    flex: 1,
+  },
+  memberName: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: Colors.textPrimary,
+  },
+  memberRole: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    marginTop: 1,
+  },
+  statusPill: {
+    backgroundColor: Colors.surfaceVariant,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: Radius.full,
+  },
+  statusPillText: {
+    fontSize: 11,
+    color: Colors.textMuted,
+    fontWeight: '500',
   },
   featureItem: {
     flexDirection: 'row',
@@ -141,13 +274,13 @@ const styles = StyleSheet.create({
   },
   featTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
     color: Colors.textPrimary,
   },
   featDesc: {
     fontSize: 12,
     color: Colors.textSecondary,
     marginTop: 2,
-    lineHeight: 16,
+    lineHeight: 17,
   },
 });

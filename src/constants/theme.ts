@@ -1,37 +1,58 @@
 export const Colors = {
-  // Cotton Candy Clouds & Soft Pink Marshmallow Palette
-  primary: '#F43F5E', // Sweet Strawberry Pink
-  primaryLight: '#FFF1F2', // Fluffy Milk Rose
-  primaryDark: '#BE123C', // Deep Berry Rose
-  accent: '#FB7185', // Soft Coral Blossom
-  accentSoft: '#FFE4E6', // Marshmallow Puff
-  background: '#FFF5F8', // Airy Cotton Candy Sky
-  surface: '#FFFFFF', // Pure White Cloud
-  surfaceVariant: '#FFF0F5', // Soft Frosted Marshmallow
-  border: '#FCE7F3', // Delicate Pastel Cloud Border
-  borderHighlight: '#FBCFE8', // Soft Glow Border
-  textPrimary: '#701A75', // Deep Plum Berry - gentle on the eyes & clear
-  textSecondary: '#BE185D', // Sweet Rose
-  textMuted: '#9CA3AF', // Gentle Mist
+  // Executive Modern Palette (Linear / Stripe / iOS Reminders style)
+  primary: '#4F46E5', // Indigo 600 - Confident, modern & professional
+  primaryHover: '#4338CA', // Indigo 700
+  primaryDark: '#3730A3', // Indigo 800
+  primaryLight: '#EEF2FF', // Indigo 50 - Subtle background highlights
+  primarySoft: '#E0E7FF', // Indigo 100
 
-  // Status colors - Pastel Sweets
-  statusTodo: '#EC4899', // Cotton Candy
-  statusTodoBg: '#FDF2F8',
-  statusInProgress: '#F59E0B', // Honey Cloud
-  statusInProgressBg: '#FEF3C7',
-  statusCompleted: '#10B981', // Mint Marshmallow
-  statusCompletedBg: '#ECFDF5',
+  accent: '#0284C7', // Sky 600
+  accentLight: '#F0F9FF', // Sky 50
 
-  // Priority colors - Soft Macaron Badges
-  priorityHigh: '#E11D48', // Strawberry
-  priorityHighBg: '#FFE4E6',
-  priorityMed: '#A855F7', // Lavender Puff
-  priorityMedBg: '#F3E8FF',
-  priorityLow: '#06B6D4', // Pastel Sky
-  priorityLowBg: '#ECFEFF',
+  background: '#F8FAFC', // Slate 50 - Ultra-clean, crisp canvas
+  surface: '#FFFFFF', // Pure White
+  surfaceElevated: '#FFFFFF',
+  surfaceVariant: '#F1F5F9', // Slate 100 - Secondary containers & dividers
+  surfaceSubtle: '#F8FAFC',
 
-  danger: '#F43F5E',
+  border: '#E2E8F0', // Slate 200 - Clean, razor-sharp outlines
+  borderLight: '#F1F5F9', // Slate 100
+  borderFocus: '#6366F1', // Indigo 500
+
+  textPrimary: '#0F172A', // Slate 900 - High contrast & readable
+  textSecondary: '#475569', // Slate 600 - Clear secondary text
+  textMuted: '#94A3B8', // Slate 400 - Subtle placeholders & icons
+
+  // Status Colors (Refined, legible tones with matched subtle backgrounds)
+  statusTodo: '#2563EB', // Blue 600
+  statusTodoBg: '#EFF6FF', // Blue 50
+  statusTodoBorder: '#BFDBFE', // Blue 200
+
+  statusInProgress: '#D97706', // Amber 600
+  statusInProgressBg: '#FFFBEB', // Amber 50
+  statusInProgressBorder: '#FDE68A', // Amber 200
+
+  statusCompleted: '#059669', // Emerald 600
+  statusCompletedBg: '#ECFDF5', // Emerald 50
+  statusCompletedBorder: '#A7F3D0', // Emerald 200
+
+  // Priority Colors
+  priorityHigh: '#E11D48', // Rose 600
+  priorityHighBg: '#FFF1F2', // Rose 50
+  priorityHighBorder: '#FECDD3', // Rose 200
+
+  priorityMed: '#7C3AED', // Violet 600
+  priorityMedBg: '#F5F3FF', // Violet 50
+  priorityMedBorder: '#DDD6FE', // Violet 200
+
+  priorityLow: '#0D9488', // Teal 600
+  priorityLowBg: '#F0FDFA', // Teal 50
+  priorityLowBorder: '#CCFBF1', // Teal 200
+
+  danger: '#EF4444',
+  dangerBg: '#FEE2E2',
   success: '#10B981',
+  successBg: '#D1FAE5',
 };
 
 export const Spacing = {
@@ -41,12 +62,39 @@ export const Spacing = {
   lg: 16,
   xl: 20,
   xxl: 24,
+  xxxl: 32,
 };
 
 export const Radius = {
-  sm: 14,
-  md: 20,
-  lg: 26,
-  xl: 34,
+  xs: 4,
+  sm: 6,
+  md: 10,
+  lg: 14,
+  xl: 18,
+  xxl: 24,
   full: 9999,
+};
+
+export const Shadows = {
+  card: {
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  modal: {
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 10,
+  },
+  button: {
+    shadowColor: '#4F46E5',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 4,
+  },
 };

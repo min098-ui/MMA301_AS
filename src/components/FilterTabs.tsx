@@ -43,7 +43,7 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
               key={tab.key}
               style={[styles.tab, isActive && styles.activeTab]}
               onPress={() => onSelectFilter(tab.key)}
-              activeOpacity={0.7}
+              activeOpacity={0.75}
             >
               <Text style={[styles.tabText, isActive && styles.activeTabText]}>{tab.label}</Text>
               <View style={[styles.badge, isActive && styles.activeBadge]}>
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: Spacing.lg,
-    gap: Spacing.sm,
+    gap: 8,
   },
   tab: {
     flexDirection: 'row',
@@ -80,6 +80,11 @@ const styles = StyleSheet.create({
   activeTab: {
     backgroundColor: Colors.primary,
     borderColor: Colors.primary,
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   tabText: {
     fontSize: 13,
@@ -88,6 +93,7 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: '#FFFFFF',
+    fontWeight: '700',
   },
   badge: {
     marginLeft: 6,
@@ -97,7 +103,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surfaceVariant,
   },
   activeBadge: {
-    backgroundColor: 'rgba(255,255,255,0.25)',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
   },
   badgeText: {
     fontSize: 11,
