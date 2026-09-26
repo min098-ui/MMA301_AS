@@ -9,44 +9,54 @@ export const ThemeSelector: React.FC = () => {
   const { themeId, setThemeId, colors } = useTheme();
   const { language } = useLanguage();
 
-  const themeList: { id: ThemeId; icon: keyof typeof Ionicons.glyphMap; labelEn: string; labelVi: string; color: string }[] = [
+  const options: {
+    id: ThemeId;
+    icon: 'snow' | 'flame';
+    titleVi: string;
+    titleEn: string;
+    subVi: string;
+    subEn: string;
+    color: string;
+  }[] = [
     {
       id: 'snow',
       icon: 'snow',
-      labelEn: 'Snow',
-      labelVi: 'Tuyết',
+      titleVi: 'Cáo Tuyết',
+      titleEn: 'Snow Fox',
+      subVi: 'Băng giá',
+      subEn: 'Glacial Ice',
       color: '#0284C7',
     },
     {
-      id: 'sakura',
-      icon: 'heart',
-      labelEn: 'Sakura',
-      labelVi: 'Hồng',
-      color: '#F43F5E',
-    },
-    {
-      id: 'indigo',
-      icon: 'briefcase',
-      labelEn: 'Indigo',
-      labelVi: 'Hiện Đại',
-      color: '#4F46E5',
-    },
-    {
-      id: 'aurora',
-      icon: 'leaf',
-      labelEn: 'Aurora',
-      labelVi: 'Ngọc Bích',
-      color: '#059669',
+      id: 'fire',
+      icon: 'flame',
+      titleVi: 'Cáo Lửa',
+      titleEn: 'Fire Fox',
+      subVi: 'Rực rỡ',
+      subEn: 'Warm Ember',
+      color: '#EA580C',
     },
   ];
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.surfaceVariant, borderColor: colors.border }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.surfaceVariant,
+          borderColor: colors.border,
+        },
+      ]}
+    >
       <View style={styles.headerRow}>
-        <View style={styles.titleGroup}>
-          <Ionicons name="color-palette-outline" size={15} color={colors.primary} />
-          <Text style={[styles.titleText, { color: colors.textSecondary }]}>
-            {language === 'vi' ? 'Đổi tông màu:' : 'Theme palette:'}
+        <View style={styles.headerLeft}>
+          <Ionicons
+            name={themeId === 'snow' ? 'snow' : 'flame'}
+            size={15}
+            color={colors.primary}
+          />
+          <Text style={[styles.headerTitle, { color: colors.textSecondary }]}>
+            {language === 'vi' ? 'Linh vật & Tông màu:' : 'Fox Mascot & Palette:'}
           </Text>
         </View>
         <Text style={[styles.activeThemeText, { color: colors.primary }]}>
@@ -54,41 +64,73 @@ export const ThemeSelector: React.FC = () => {
         </Text>
       </View>
 
-      <View style={styles.swatchRow}>
-        {themeList.map((item) => {
+      <View style={styles.optionsRow}>
+        {options.map((item) => {
           const isActive = themeId === item.id;
           return (
             <TouchableOpacity
               key={item.id}
               style={[
-                styles.swatchBtn,
+                styles.optionCard,
                 {
+                  backgroundColor: isActive ? colors.surface : colors.surfaceSubtle,
                   borderColor: isActive ? item.color : colors.border,
-                  backgroundColor: isActive ? item.color + '15' : colors.surface,
+                },
+                isActive && {
+                  shadowColor: item.color,
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.18,
+                  shadowRadius: 5,
+                  elevation: 3,
                 },
               ]}
               onPress={() => setThemeId(item.id)}
-              activeOpacity={0.7}
-              accessibilityLabel={`Select ${item.labelEn} theme`}
+              activeOpacity={0.8}
             >
-              <View style={[styles.colorDot, { backgroundColor: item.color }]} />
-              <Ionicons
-                name={item.icon}
-                size={13}
-                color={isActive ? item.color : colors.textMuted}
-                style={{ marginRight: 3 }}
-              />
-              <Text
+              <View
                 style={[
-                  styles.swatchLabel,
+                  styles.iconBadge,
                   {
-                    color: isActive ? item.color : colors.textSecondary,
-                    fontWeight: isActive ? '800' : '600',
+                    backgroundColor: isActive ? item.color + '18' : colors.surfaceVariant,
                   },
                 ]}
               >
-                {language === 'vi' ? item.labelVi : item.labelEn}
-              </Text>
+                <Ionicons
+                  name={item.icon}
+                  size={16}
+                  color={isActive ? item.color : colors.textMuted}
+                />
+              </View>
+
+              <View style={styles.textGroup}>
+                <Text
+                  style={[
+                    styles.optionTitle,
+                    {
+                      color: isActive ? item.color : colors.textSecondary,
+                      fontWeight: isActive ? '800' : '600',
+                    },
+                  ]}
+                >
+                  {language === 'vi' ? item.titleVi : item.titleEn}
+                </Text>
+                <Text
+                  style={[
+                    styles.optionSubtitle,
+                    {
+                      color: isActive ? colors.textPrimary : colors.textMuted,
+                    },
+                  ]}
+                >
+                  {language === 'vi' ? item.subVi : item.subEn}
+                </Text>
+              </View>
+
+              {isActive && (
+                <View style={[styles.checkCircle, { backgroundColor: item.color }]}>
+                  <Ionicons name="checkmark" size={11} color="#FFFFFF" />
+                </View>
+              )}
             </TouchableOpacity>
           );
         })}
@@ -110,12 +152,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
-  titleGroup: {
+  headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: 6,
   },
-  titleText: {
+  headerTitle: {
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 0.2,
@@ -123,29 +165,45 @@ const styles = StyleSheet.create({
   activeThemeText: {
     fontSize: 11,
     fontWeight: '800',
-    letterSpacing: 0.3,
   },
-  swatchRow: {
+  optionsRow: {
     flexDirection: 'row',
-    gap: 6,
+    gap: 8,
   },
-  swatchBtn: {
+  optionCard: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 6,
-    paddingHorizontal: 6,
-    borderRadius: Radius.full,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderRadius: Radius.md,
     borderWidth: 1.5,
   },
-  colorDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
-    marginRight: 4,
+  iconBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
   },
-  swatchLabel: {
-    fontSize: 11,
+  textGroup: {
+    flex: 1,
+  },
+  optionTitle: {
+    fontSize: 12,
+    letterSpacing: 0.1,
+  },
+  optionSubtitle: {
+    fontSize: 10,
+    marginTop: 1,
+  },
+  checkCircle: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 4,
   },
 });

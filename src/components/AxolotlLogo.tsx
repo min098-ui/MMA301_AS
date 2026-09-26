@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet, Animated, TouchableOpacity } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 
-interface SnowFoxLogoProps {
+interface FoxLogoProps {
   size?: number;
   showOnlineBadge?: boolean;
 }
 
-export const SnowFoxLogo: React.FC<SnowFoxLogoProps> = ({
+export const FoxLogo: React.FC<FoxLogoProps> = ({
   size = 48,
   showOnlineBadge = false,
 }) => {
@@ -70,9 +70,9 @@ export const SnowFoxLogo: React.FC<SnowFoxLogoProps> = ({
 
   const combinedScale = Animated.multiply(scaleAnim, tapBounceAnim);
 
-  const mascotSource =
-    themeId === 'sakura'
-      ? require('../../assets/axolotl_3d.jpg')
+  const foxImage =
+    themeId === 'fire'
+      ? require('../../assets/fire_fox_3d.jpg')
       : require('../../assets/snow_fox_3d.jpg');
 
   return (
@@ -96,7 +96,7 @@ export const SnowFoxLogo: React.FC<SnowFoxLogoProps> = ({
         ]}
       >
         <Image
-          source={mascotSource}
+          source={foxImage}
           style={[styles.image, { width: size, height: size, borderRadius }]}
           resizeMode="cover"
         />
@@ -107,8 +107,8 @@ export const SnowFoxLogo: React.FC<SnowFoxLogoProps> = ({
 };
 
 // Aliases for seamless backwards compatibility
-export const AxolotlLogo = SnowFoxLogo;
-export const FoxLogo = SnowFoxLogo;
+export const AxolotlLogo = FoxLogo;
+export const SnowFoxLogo = FoxLogo;
 
 const styles = StyleSheet.create({
   wrapper: {
