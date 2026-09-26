@@ -19,8 +19,10 @@ import { TaskModal } from '../components/TaskModal';
 import { FilterTabs } from '../components/FilterTabs';
 import { EmptyState } from '../components/EmptyState';
 import { AxolotlLogo } from '../components/AxolotlLogo';
+import { ThemeSelector } from '../components/ThemeSelector';
 import { useLanguage } from '../context/LanguageContext';
-import { Colors, Spacing, Radius, Shadows } from '../constants/theme';
+import { useTheme } from '../context/ThemeContext';
+import { Spacing, Radius, Shadows } from '../constants/theme';
 
 export const HomeScreen: React.FC = () => {
   const { width } = useWindowDimensions();
@@ -42,6 +44,7 @@ export const HomeScreen: React.FC = () => {
   } = useTasks();
 
   const { t, language, toggleLanguage } = useLanguage();
+  const { colors, theme } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
 
@@ -83,32 +86,60 @@ export const HomeScreen: React.FC = () => {
   const renderHeader = () => (
     <View style={[styles.headerContainer, isTablet && styles.tabletContainer]}>
       {/* Top Executive Dashboard Card */}
-      <View style={styles.dashboardCard}>
+      <View
+        style={[
+          styles.dashboardCard,
+          {
+            backgroundColor: colors.surface,
+            borderColor: colors.border,
+          },
+        ]}
+      >
         {/* App Branding & Language Switcher */}
         <View style={styles.topRow}>
           <AxolotlLogo size={46} showOnlineBadge={true} />
           <View style={styles.brandInfo}>
             <View style={styles.titleRow}>
-              <Text style={styles.brandName}>{t.appName}</Text>
-              <View style={styles.liveBadge}>
-                <Ionicons name="snow" size={11} color={Colors.primary} />
-                <View style={styles.liveDot} />
-                <Text style={styles.liveText}>SYNC</Text>
+              <Text style={[styles.brandName, { color: colors.textPrimary }]}>{t.appName}</Text>
+              <View
+                style={[
+                  styles.liveBadge,
+                  {
+                    backgroundColor: colors.primaryLight,
+                    borderColor: colors.primarySoft,
+                  },
+                ]}
+              >
+                <Ionicons
+                  name={theme.icon as any}
+                  size={11}
+                  color={colors.primary}
+                />
+                <View style={[styles.liveDot, { backgroundColor: colors.primary }]} />
+                <Text style={[styles.liveText, { color: colors.primary }]}>SYNC</Text>
               </View>
             </View>
-            <Text style={styles.brandSubtitle} numberOfLines={1}>
+            <Text style={[styles.brandSubtitle, { color: colors.textSecondary }]} numberOfLines={1}>
               {t.appSubtitle}
             </Text>
           </View>
 
           {/* Segmented EN / VI Toggle */}
-          <View style={styles.langSegment}>
+          <View
+            style={[
+              styles.langSegment,
+              {
+                backgroundColor: colors.surfaceVariant,
+                borderColor: colors.border,
+              },
+            ]}
+          >
             <TouchableOpacity
               style={[styles.langBtn, language === 'en' && styles.langBtnActive]}
               onPress={() => language !== 'en' && toggleLanguage()}
               activeOpacity={0.7}
             >
-              <Text style={[styles.langText, language === 'en' && styles.langTextActive]}>
+              <Text style={[styles.langText, language === 'en' && { color: colors.primary, fontWeight: '800' }]}>
                 EN
               </Text>
             </TouchableOpacity>
@@ -117,16 +148,25 @@ export const HomeScreen: React.FC = () => {
               onPress={() => language !== 'vi' && toggleLanguage()}
               activeOpacity={0.7}
             >
-              <Text style={[styles.langText, language === 'vi' && styles.langTextActive]}>
+              <Text style={[styles.langText, language === 'vi' && { color: colors.primary, fontWeight: '800' }]}>
                 VI
               </Text>
             </TouchableOpacity>
           </View>
         </View>
 
+        {/* Ô CHUYỂN MÀU (Color Theme Switcher) */}
+        <ThemeSelector />
+
         {/* Primary Action Button */}
         <TouchableOpacity
-          style={styles.primaryAddBtn}
+          style={[
+            styles.primaryAddBtn,
+            {
+              backgroundColor: colors.primary,
+              shadowColor: colors.primary,
+            },
+          ]}
           onPress={handleOpenCreateModal}
           activeOpacity={0.85}
         >
@@ -135,52 +175,68 @@ export const HomeScreen: React.FC = () => {
         </TouchableOpacity>
 
         {/* KPI Metrics Strip */}
-        <View style={styles.metricsContainer}>
+        <View
+          style={[
+            styles.metricsContainer,
+            {
+              backgroundColor: colors.surfaceVariant,
+              borderColor: colors.border,
+            },
+          ]}
+        >
           <View style={styles.metricItem}>
-            <Text style={styles.metricNumber}>{counts.all}</Text>
-            <Text style={styles.metricLabel}>{t.total}</Text>
+            <Text style={[styles.metricNumber, { color: colors.textPrimary }]}>{counts.all}</Text>
+            <Text style={[styles.metricLabel, { color: colors.textSecondary }]}>{t.total}</Text>
           </View>
 
-          <View style={styles.metricDivider} />
+          <View style={[styles.metricDivider, { backgroundColor: colors.border }]} />
 
           <View style={styles.metricItem}>
-            <Text style={[styles.metricNumber, { color: Colors.statusTodo }]}>{counts.todo}</Text>
-            <Text style={styles.metricLabel}>{t.todo}</Text>
+            <Text style={[styles.metricNumber, { color: colors.statusTodo }]}>{counts.todo}</Text>
+            <Text style={[styles.metricLabel, { color: colors.textSecondary }]}>{t.todo}</Text>
           </View>
 
-          <View style={styles.metricDivider} />
+          <View style={[styles.metricDivider, { backgroundColor: colors.border }]} />
 
           <View style={styles.metricItem}>
-            <Text style={[styles.metricNumber, { color: Colors.statusInProgress }]}>
+            <Text style={[styles.metricNumber, { color: colors.statusInProgress }]}>
               {counts.inProgress}
             </Text>
-            <Text style={styles.metricLabel}>{t.inProgress}</Text>
+            <Text style={[styles.metricLabel, { color: colors.textSecondary }]}>{t.inProgress}</Text>
           </View>
 
-          <View style={styles.metricDivider} />
+          <View style={[styles.metricDivider, { backgroundColor: colors.border }]} />
 
           <View style={styles.metricItem}>
-            <Text style={[styles.metricNumber, { color: Colors.statusCompleted }]}>
+            <Text style={[styles.metricNumber, { color: colors.statusCompleted }]}>
               {counts.completed}
             </Text>
-            <Text style={styles.metricLabel}>{t.done}</Text>
+            <Text style={[styles.metricLabel, { color: colors.textSecondary }]}>{t.done}</Text>
           </View>
         </View>
       </View>
 
       {/* Spotlight Search Bar */}
-      <View style={styles.searchBar}>
-        <Ionicons name="search" size={18} color={Colors.textMuted} style={styles.searchIcon} />
+      <View
+        style={[
+          styles.searchBar,
+          {
+            backgroundColor: colors.surface,
+            borderColor: colors.border,
+          },
+        ]}
+      >
+        <Ionicons name="search" size={18} color={colors.textMuted} style={styles.searchIcon} />
         <TextInput
-          style={styles.searchInput}
+          style={[styles.searchInput, { color: colors.textPrimary }]}
           placeholder={t.searchPlaceholder}
-          placeholderTextColor={Colors.textMuted}
+          placeholderTextColor={colors.textMuted}
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
         {searchQuery.length > 0 && (
           <TouchableOpacity onPress={() => setSearchQuery('')} style={styles.clearBtn} activeOpacity={0.7}>
-            <Ionicons name="close-circle" size={18} color={Colors.textMuted} />
+            <Ionicons name="close-circle" size={18} color={colors.textMuted} />
           </TouchableOpacity>
         )}
       </View>
@@ -194,7 +250,7 @@ export const HomeScreen: React.FC = () => {
 
       {/* Section Header */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
           {selectedFilter === 'All'
             ? t.allTasks
             : selectedFilter === 'To Do'
@@ -203,20 +259,30 @@ export const HomeScreen: React.FC = () => {
                 ? t.inProgressTasks
                 : t.completedTasks}
         </Text>
-        <View style={styles.countBadge}>
-          <Text style={styles.countBadgeText}>{tasks.length}</Text>
+        <View
+          style={[
+            styles.countBadge,
+            {
+              backgroundColor: colors.surfaceVariant,
+              borderColor: colors.border,
+            },
+          ]}
+        >
+          <Text style={[styles.countBadgeText, { color: colors.textPrimary }]}>{tasks.length}</Text>
         </View>
       </View>
     </View>
   );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         {loading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={Colors.primary} />
-            <Text style={styles.loadingText}>Syncing with Cloud Firestore...</Text>
+            <ActivityIndicator size="large" color={colors.primary} />
+            <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
+              Syncing with Cloud Firestore...
+            </Text>
           </View>
         ) : (
           <FlatList
@@ -248,8 +314,8 @@ export const HomeScreen: React.FC = () => {
               <RefreshControl
                 refreshing={refreshing}
                 onRefresh={refresh}
-                tintColor={Colors.primary}
-                colors={[Colors.primary]}
+                tintColor={colors.primary}
+                colors={[colors.primary]}
               />
             }
             contentContainerStyle={styles.listContent}
@@ -258,7 +324,13 @@ export const HomeScreen: React.FC = () => {
 
         {/* Floating Action Button (FAB) */}
         <TouchableOpacity
-          style={styles.fab}
+          style={[
+            styles.fab,
+            {
+              backgroundColor: colors.primary,
+              shadowColor: colors.primary,
+            },
+          ]}
           onPress={handleOpenCreateModal}
           activeOpacity={0.85}
           accessibilityLabel="Add Task"
@@ -281,11 +353,9 @@ export const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.background,
   },
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
   },
   tabletContainer: {
     maxWidth: 720,
@@ -301,7 +371,6 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: Spacing.md,
     fontSize: 14,
-    color: Colors.textSecondary,
     fontWeight: '500',
   },
   listContent: {
@@ -311,12 +380,10 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.md,
   },
   dashboardCard: {
-    backgroundColor: Colors.surface,
     marginHorizontal: Spacing.lg,
     borderRadius: Radius.lg,
     padding: Spacing.lg,
     borderWidth: 1,
-    borderColor: Colors.border,
     marginBottom: Spacing.md,
     ...Shadows.card,
   },
@@ -337,44 +404,36 @@ const styles = StyleSheet.create({
   brandName: {
     fontSize: 17,
     fontWeight: '800',
-    color: Colors.textPrimary,
     letterSpacing: -0.3,
   },
   liveBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E0F2FE',
-    borderWidth: 1,
-    borderColor: '#BAE6FD',
     paddingHorizontal: 7,
     paddingVertical: 2,
     borderRadius: Radius.full,
     gap: 4,
+    borderWidth: 1,
   },
   liveDot: {
     width: 5,
     height: 5,
     borderRadius: 2.5,
-    backgroundColor: Colors.primary,
   },
   liveText: {
     fontSize: 9,
     fontWeight: '800',
-    color: Colors.primary,
     letterSpacing: 0.4,
   },
   brandSubtitle: {
     fontSize: 12,
-    color: Colors.textSecondary,
     marginTop: 2,
   },
   langSegment: {
     flexDirection: 'row',
-    backgroundColor: Colors.surfaceVariant,
     borderRadius: Radius.sm,
     padding: 2,
     borderWidth: 1,
-    borderColor: Colors.border,
   },
   langBtn: {
     paddingHorizontal: 8,
@@ -382,7 +441,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   langBtnActive: {
-    backgroundColor: Colors.surface,
+    backgroundColor: '#FFFFFF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
@@ -392,17 +451,12 @@ const styles = StyleSheet.create({
   langText: {
     fontSize: 11,
     fontWeight: '600',
-    color: Colors.textMuted,
-  },
-  langTextActive: {
-    color: Colors.primary,
-    fontWeight: '800',
+    color: '#64748B',
   },
   primaryAddBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.primary,
     paddingVertical: 11,
     paddingHorizontal: Spacing.lg,
     borderRadius: Radius.md,
@@ -417,13 +471,11 @@ const styles = StyleSheet.create({
   },
   metricsContainer: {
     flexDirection: 'row',
-    backgroundColor: Colors.surfaceVariant,
     borderRadius: Radius.md,
     paddingVertical: Spacing.sm + 2,
     paddingHorizontal: Spacing.sm,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: Colors.border,
   },
   metricItem: {
     flex: 1,
@@ -432,27 +484,22 @@ const styles = StyleSheet.create({
   metricNumber: {
     fontSize: 16,
     fontWeight: '800',
-    color: Colors.textPrimary,
   },
   metricLabel: {
     fontSize: 11,
-    color: Colors.textSecondary,
     marginTop: 2,
     fontWeight: '600',
   },
   metricDivider: {
     width: 1,
     height: 22,
-    backgroundColor: Colors.border,
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.surface,
     marginHorizontal: Spacing.lg,
     borderRadius: Radius.md,
     borderWidth: 1,
-    borderColor: Colors.border,
     paddingHorizontal: Spacing.md,
     height: 44,
     marginBottom: Spacing.xs,
@@ -464,7 +511,6 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 14,
-    color: Colors.textPrimary,
   },
   clearBtn: {
     padding: 4,
@@ -479,22 +525,18 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: Colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   countBadge: {
-    backgroundColor: Colors.surfaceVariant,
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: Radius.full,
     borderWidth: 1,
-    borderColor: Colors.border,
   },
   countBadgeText: {
     fontSize: 11,
     fontWeight: '700',
-    color: Colors.textPrimary,
   },
   fab: {
     position: 'absolute',
@@ -503,7 +545,6 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: Colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
     ...Shadows.button,

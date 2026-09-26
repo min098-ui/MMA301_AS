@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Task, TaskStatus, TaskPriority } from '../types/task';
 import { useLanguage } from '../context/LanguageContext';
-import { Colors, Spacing, Radius, Shadows } from '../constants/theme';
+import { useTheme } from '../context/ThemeContext';
+import { Spacing, Radius, Shadows } from '../constants/theme';
 
 interface TaskCardProps {
   task: Task;
@@ -14,30 +15,31 @@ interface TaskCardProps {
 
 export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onToggleStatus }) => {
   const { t } = useLanguage();
+  const { colors } = useTheme();
 
   const getStatusBadge = (status: TaskStatus) => {
     switch (status) {
       case 'Completed':
         return {
-          bg: Colors.statusCompletedBg,
-          text: Colors.statusCompleted,
-          border: Colors.statusCompletedBorder,
+          bg: colors.statusCompletedBg,
+          text: colors.statusCompleted,
+          border: colors.statusCompletedBorder,
           icon: 'checkmark-circle' as const,
           label: t.done,
         };
       case 'In Progress':
         return {
-          bg: Colors.statusInProgressBg,
-          text: Colors.statusInProgress,
-          border: Colors.statusInProgressBorder,
+          bg: colors.statusInProgressBg,
+          text: colors.statusInProgress,
+          border: colors.statusInProgressBorder,
           icon: 'sync-circle' as const,
           label: t.inProgress,
         };
       default:
         return {
-          bg: Colors.statusTodoBg,
-          text: Colors.statusTodo,
-          border: Colors.statusTodoBorder,
+          bg: colors.statusTodoBg,
+          text: colors.statusTodo,
+          border: colors.statusTodoBorder,
           icon: 'ellipse-outline' as const,
           label: t.todo,
         };
@@ -48,23 +50,23 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onTo
     switch (priority) {
       case 'High':
         return {
-          bg: Colors.priorityHighBg,
-          text: Colors.priorityHigh,
-          border: Colors.priorityHighBorder,
+          bg: colors.priorityHighBg,
+          text: colors.priorityHigh,
+          border: colors.priorityHighBorder,
           label: t.prioHigh,
         };
       case 'Medium':
         return {
-          bg: Colors.priorityMedBg,
-          text: Colors.priorityMed,
-          border: Colors.priorityMedBorder,
+          bg: colors.priorityMedBg,
+          text: colors.priorityMed,
+          border: colors.priorityMedBorder,
           label: t.prioMed,
         };
       default:
         return {
-          bg: Colors.priorityLowBg,
-          text: Colors.priorityLow,
-          border: Colors.priorityLowBorder,
+          bg: colors.priorityLowBg,
+          text: colors.priorityLow,
+          border: colors.priorityLowBorder,
           label: t.prioLow,
         };
     }
@@ -90,7 +92,15 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onTo
   const priorityStyle = getPriorityBadge(task.priority);
 
   return (
-    <View style={styles.card}>
+    <View
+      style={[
+        styles.card,
+        {
+          backgroundColor: colors.surface,
+          borderColor: colors.border,
+        },
+      ]}
+    >
       {/* Top Header Row: Status, Priority & Actions */}
       <View style={styles.topRow}>
         <View style={styles.badgeGroup}>
@@ -127,12 +137,18 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onTo
         {/* Action Buttons */}
         <View style={styles.actions}>
           <TouchableOpacity
-            style={styles.actionBtn}
+            style={[
+              styles.actionBtn,
+              {
+                backgroundColor: colors.surfaceVariant,
+                borderColor: colors.border,
+              },
+            ]}
             onPress={() => onEdit(task)}
             accessibilityLabel="Edit task"
             activeOpacity={0.7}
           >
-            <Ionicons name="create-outline" size={16} color={Colors.primary} />
+            <Ionicons name="create-outline" size={16} color={colors.primary} />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -141,7 +157,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onTo
             accessibilityLabel="Delete task"
             activeOpacity={0.7}
           >
-            <Ionicons name="trash-outline" size={16} color={Colors.danger} />
+            <Ionicons name="trash-outline" size={16} color={colors.danger} />
           </TouchableOpacity>
         </View>
       </View>
@@ -150,6 +166,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onTo
       <Text
         style={[
           styles.title,
+          { color: colors.textPrimary },
           task.status === 'Completed' && styles.completedTitle,
         ]}
       >
@@ -158,21 +175,21 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onTo
 
       {/* Description */}
       {task.description ? (
-        <Text style={styles.description} numberOfLines={3}>
+        <Text style={[styles.description, { color: colors.textSecondary }]} numberOfLines={3}>
           {task.description}
         </Text>
       ) : null}
 
       {/* Footer Info Row */}
-      <View style={styles.footer}>
-        <View style={styles.dateBadge}>
-          <Ionicons name="calendar-outline" size={12} color={Colors.textSecondary} />
-          <Text style={styles.dateText}>
-            {t.due}: <Text style={styles.dateBold}>{task.dueDate || 'No date'}</Text>
+      <View style={[styles.footer, { borderTopColor: colors.borderLight }]}>
+        <View style={[styles.dateBadge, { backgroundColor: colors.surfaceVariant }]}>
+          <Ionicons name="calendar-outline" size={12} color={colors.textSecondary} />
+          <Text style={[styles.dateText, { color: colors.textSecondary }]}>
+            {t.due}: <Text style={[styles.dateBold, { color: colors.textPrimary }]}>{task.dueDate || 'No date'}</Text>
           </Text>
         </View>
 
-        <Text style={styles.idBadge}>#{task.id.slice(0, 6)}</Text>
+        <Text style={[styles.idBadge, { color: colors.textMuted }]}>#{task.id.slice(0, 6)}</Text>
       </View>
     </View>
   );
@@ -180,14 +197,12 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onTo
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.surface,
     borderRadius: Radius.lg,
     paddingVertical: Spacing.md + 2,
     paddingHorizontal: Spacing.lg,
     marginHorizontal: Spacing.lg,
     marginBottom: Spacing.md,
     borderWidth: 1,
-    borderColor: Colors.border,
     ...Shadows.card,
   },
   topRow: {
@@ -243,30 +258,26 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: Radius.sm,
-    backgroundColor: Colors.surfaceVariant,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: Colors.border,
   },
   deleteActionBtn: {
-    backgroundColor: Colors.dangerBg,
+    backgroundColor: '#FEE2E2',
     borderColor: '#FECDD3',
   },
   title: {
     fontSize: 15,
     fontWeight: '700',
-    color: Colors.textPrimary,
     lineHeight: 21,
     marginBottom: 4,
   },
   completedTitle: {
-    color: Colors.textMuted,
+    opacity: 0.5,
     textDecorationLine: 'line-through',
   },
   description: {
     fontSize: 13,
-    color: Colors.textSecondary,
     lineHeight: 18,
     marginBottom: Spacing.sm,
   },
@@ -275,7 +286,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderTopWidth: 1,
-    borderTopColor: Colors.borderLight,
     paddingTop: Spacing.sm,
     marginTop: Spacing.xs,
   },
@@ -283,22 +293,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: Colors.surfaceVariant,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: Radius.xs,
   },
   dateText: {
     fontSize: 11,
-    color: Colors.textSecondary,
   },
   dateBold: {
     fontWeight: '600',
-    color: Colors.textPrimary,
   },
   idBadge: {
     fontSize: 11,
-    color: Colors.textMuted,
     fontFamily: 'monospace',
     fontWeight: '500',
   },

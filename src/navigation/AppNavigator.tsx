@@ -8,7 +8,7 @@ import { TeamsScreen } from '../screens/TeamsScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLanguage } from '../context/LanguageContext';
-import { Colors } from '../constants/theme';
+import { useTheme } from '../context/ThemeContext';
 
 export type RootTabParamList = {
   Home: undefined;
@@ -21,6 +21,7 @@ const Tab = createBottomTabNavigator<RootTabParamList>();
 export const AppNavigator: React.FC = () => {
   const insets = useSafeAreaInsets();
   const { t } = useLanguage();
+  const { colors } = useTheme();
   const bottomPadding = Math.max(insets.bottom, 10);
   const barHeight = 58 + bottomPadding;
 
@@ -34,10 +35,12 @@ export const AppNavigator: React.FC = () => {
             {
               height: barHeight,
               paddingBottom: bottomPadding,
+              backgroundColor: colors.surface,
+              borderTopColor: colors.border,
             },
           ],
-          tabBarActiveTintColor: Colors.primary,
-          tabBarInactiveTintColor: Colors.textMuted,
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.textMuted,
           tabBarLabelStyle: styles.tabBarLabel,
           tabBarIcon: ({ focused, color, size }) => {
             let iconName: keyof typeof Ionicons.glyphMap;
@@ -82,9 +85,7 @@ export const AppNavigator: React.FC = () => {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: Colors.surface,
     borderTopWidth: 1,
-    borderTopColor: Colors.border,
     paddingTop: 6,
     shadowColor: '#0F172A',
     shadowOffset: { width: 0, height: -2 },

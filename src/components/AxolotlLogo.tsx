@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet, Animated, TouchableOpacity } from 'react-native';
-import { Colors } from '../constants/theme';
+import { useTheme } from '../context/ThemeContext';
 
 interface SnowFoxLogoProps {
   size?: number;
@@ -11,6 +11,7 @@ export const SnowFoxLogo: React.FC<SnowFoxLogoProps> = ({
   size = 48,
   showOnlineBadge = false,
 }) => {
+  const { colors, themeId } = useTheme();
   const borderRadius = Math.round(size * 0.32);
 
   // Floating & Breathing Animation using useState lazy initializer (lint-safe)
@@ -69,6 +70,11 @@ export const SnowFoxLogo: React.FC<SnowFoxLogoProps> = ({
 
   const combinedScale = Animated.multiply(scaleAnim, tapBounceAnim);
 
+  const mascotSource =
+    themeId === 'sakura'
+      ? require('../../assets/axolotl_3d.jpg')
+      : require('../../assets/snow_fox_3d.jpg');
+
   return (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -82,12 +88,15 @@ export const SnowFoxLogo: React.FC<SnowFoxLogoProps> = ({
             width: size,
             height: size,
             borderRadius,
+            backgroundColor: colors.mascotBg,
+            borderColor: colors.mascotBorder,
+            shadowColor: colors.primary,
             transform: [{ translateY }, { scale: combinedScale }],
           },
         ]}
       >
         <Image
-          source={require('../../assets/snow_fox_3d.jpg')}
+          source={mascotSource}
           style={[styles.image, { width: size, height: size, borderRadius }]}
           resizeMode="cover"
         />
@@ -108,10 +117,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {
-    backgroundColor: '#E0F2FE', // Glacial Ice Tint
     borderWidth: 2,
-    borderColor: '#7DD3FC', // Vibrant Crystalline Ice Border
-    shadowColor: Colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.28,
     shadowRadius: 8,

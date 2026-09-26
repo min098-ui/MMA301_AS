@@ -2,7 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { TaskStatus } from '../types/task';
 import { useLanguage } from '../context/LanguageContext';
-import { Colors, Spacing, Radius } from '../constants/theme';
+import { useTheme } from '../context/ThemeContext';
+import { Spacing, Radius } from '../constants/theme';
 
 interface FilterTabsProps {
   currentFilter: 'All' | TaskStatus;
@@ -21,6 +22,7 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
   counts,
 }) => {
   const { t } = useLanguage();
+  const { colors } = useTheme();
 
   const tabs: { key: 'All' | TaskStatus; label: string; count: number }[] = [
     { key: 'All', label: t.allTasks, count: counts.all },
@@ -41,13 +43,48 @@ export const FilterTabs: React.FC<FilterTabsProps> = ({
           return (
             <TouchableOpacity
               key={tab.key}
-              style={[styles.tab, isActive && styles.activeTab]}
+              style={[
+                styles.tab,
+                {
+                  backgroundColor: isActive ? colors.primary : colors.surface,
+                  borderColor: isActive ? colors.primary : colors.border,
+                },
+                isActive && {
+                  shadowColor: colors.primary,
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 4,
+                  elevation: 3,
+                },
+              ]}
               onPress={() => onSelectFilter(tab.key)}
               activeOpacity={0.75}
             >
-              <Text style={[styles.tabText, isActive && styles.activeTabText]}>{tab.label}</Text>
-              <View style={[styles.badge, isActive && styles.activeBadge]}>
-                <Text style={[styles.badgeText, isActive && styles.activeBadgeText]}>
+              <Text
+                style={[
+                  styles.tabText,
+                  { color: isActive ? '#FFFFFF' : colors.textSecondary },
+                  isActive && styles.activeTabText,
+                ]}
+              >
+                {tab.label}
+              </Text>
+              <View
+                style={[
+                  styles.badge,
+                  {
+                    backgroundColor: isActive
+                      ? 'rgba(255, 255, 255, 0.25)'
+                      : colors.surfaceVariant,
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.badgeText,
+                    { color: isActive ? '#FFFFFF' : colors.textSecondary },
+                  ]}
+                >
                   {tab.count}
                 </Text>
               </View>
@@ -73,26 +110,13 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     paddingHorizontal: 12,
     borderRadius: Radius.full,
-    backgroundColor: Colors.surface,
     borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  activeTab: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
   },
   tabText: {
     fontSize: 13,
     fontWeight: '600',
-    color: Colors.textSecondary,
   },
   activeTabText: {
-    color: '#FFFFFF',
     fontWeight: '700',
   },
   badge: {
@@ -100,17 +124,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 1,
     borderRadius: Radius.full,
-    backgroundColor: Colors.surfaceVariant,
-  },
-  activeBadge: {
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
   },
   badgeText: {
     fontSize: 11,
     fontWeight: '700',
-    color: Colors.textSecondary,
-  },
-  activeBadgeText: {
-    color: '#FFFFFF',
   },
 });
