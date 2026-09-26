@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { ArcticFoxLogo } from '../components/ArcticFoxLogo';
 import { Colors, Spacing, Radius } from '../constants/theme';
 import { isFirebaseConfigured } from '../services/firebaseConfig';
 
@@ -13,14 +14,14 @@ export const ProfileScreen: React.FC = () => {
       <ScrollView contentContainerStyle={styles.container}>
         {/* User Card */}
         <View style={styles.profileCard}>
-          <View style={styles.avatar}>
-            <Ionicons name="person" size={40} color={Colors.primary} />
+          <View style={{ marginBottom: Spacing.md }}>
+            <ArcticFoxLogo size={76} />
           </View>
-          <Text style={styles.userName}>Public Student / Tester</Text>
+          <Text style={styles.userName}>Nguyen Tuong Vy (Cáo Tuyết 🦊❄️)</Text>
           <Text style={styles.userRole}>Practical Exam 1 – Mode: Public CRUD</Text>
 
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>No Auth Required (Exam 1)</Text>
+            <Text style={styles.badgeText}>Ocean & Snow Edition 🌊</Text>
           </View>
         </View>
 

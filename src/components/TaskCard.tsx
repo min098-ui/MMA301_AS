@@ -74,13 +74,15 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onTo
           onPress={() => onToggleStatus && onToggleStatus(task)}
           activeOpacity={0.7}
         >
-          <Ionicons name={statusStyle.icon} size={14} color={statusStyle.text} />
+          <Text style={{ fontSize: 13, marginRight: 2 }}>
+            {task.status === 'Completed' ? '❄️' : task.status === 'In Progress' ? '🌊' : '🦊'}
+          </Text>
           <Text style={[styles.badgeText, { color: statusStyle.text }]}>{task.status}</Text>
         </TouchableOpacity>
 
         <View style={[styles.badge, { backgroundColor: priorityStyle.bg }]}>
           <Text style={[styles.badgeText, { color: priorityStyle.text }]}>
-            {task.priority} Priority
+            {task.priority === 'High' ? '🔥 Cao' : task.priority === 'Medium' ? '✨ Vừa' : '🌿 Thấp'}
           </Text>
         </View>
 

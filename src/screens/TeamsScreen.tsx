@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { ArcticFoxLogo } from '../components/ArcticFoxLogo';
 import { Colors, Spacing, Radius } from '../constants/theme';
 
 export const TeamsScreen: React.FC = () => {
@@ -26,18 +27,18 @@ export const TeamsScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.iconCircle}>
-          <Ionicons name="people" size={48} color={Colors.primary} />
+        <View style={{ marginTop: Spacing.lg, marginBottom: Spacing.md }}>
+          <ArcticFoxLogo size={76} />
         </View>
 
         <View style={styles.badge}>
-          <Text style={styles.badgeText}>Milestone Preview</Text>
+          <Text style={styles.badgeText}>Milestone Preview ❄️</Text>
         </View>
 
-        <Text style={styles.title}>Teams & Collaboration</Text>
+        <Text style={styles.title}>Đội Ngũ & Cộng Tác</Text>
         <Text style={styles.subtitle}>
-          This section is scheduled for Practical Exam 2. The Firestore data model already includes
-          teamId and assigneeId fields in preparation!
+          Tính năng hợp tác nhóm theo phong cách Cáo Tuyết & Biển Xanh (Practical Exam 2).
+          Data model đã có sẵn teamId và assigneeId!
         </Text>
 
         <View style={styles.card}>

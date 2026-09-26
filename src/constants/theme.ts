@@ -1,33 +1,35 @@
 export const Colors = {
-  primary: '#4F46E5', // Indigo 600
-  primaryLight: '#EEF2FF', // Indigo 50
-  primaryDark: '#3730A3', // Indigo 800
-  accent: '#06B6D4', // Cyan 500
-  background: '#F8FAFC', // Slate 50
+  // Arctic Ocean & Snowy Fox Palette
+  primary: '#0284C7', // Ocean Sky Blue
+  primaryLight: '#E0F2FE', // Frosted Ice Blue
+  primaryDark: '#0369A1', // Deep Arctic Ocean
+  accent: '#38BDF8', // Glacial Cyan
+  accentSoft: '#BAE6FD', // Pastel Snow Ice
+  background: '#F0F9FF', // Soft Snowy Light Blue
   surface: '#FFFFFF',
-  surfaceVariant: '#F1F5F9', // Slate 100
-  border: '#E2E8F0', // Slate 200
-  textPrimary: '#0F172A', // Slate 900
-  textSecondary: '#475569', // Slate 600
-  textMuted: '#94A3B8', // Slate 400
+  surfaceVariant: '#E0F2FE', // Ice Frost Chip
+  border: '#BAE6FD', // Soft Ice Border
+  textPrimary: '#0C4A6E', // Deep Arctic Navy
+  textSecondary: '#0284C7', // Soft Ocean Blue
+  textMuted: '#64748B', // Arctic Mist
 
-  // Status colors
-  statusTodo: '#2563EB', // Blue 600
-  statusTodoBg: '#EFF6FF',
-  statusInProgress: '#D97706', // Amber 600
-  statusInProgressBg: '#FFFBEB',
-  statusCompleted: '#059669', // Emerald 600
-  statusCompletedBg: '#ECFDF5',
+  // Status colors - Cute Pastel
+  statusTodo: '#0284C7', // Arctic Blue
+  statusTodoBg: '#E0F2FE',
+  statusInProgress: '#D97706', // Warm Amber
+  statusInProgressBg: '#FEF3C7',
+  statusCompleted: '#059669', // Emerald Mint
+  statusCompletedBg: '#D1FAE5',
 
-  // Priority colors
-  priorityHigh: '#DC2626', // Red 600
-  priorityHighBg: '#FEF2F2',
-  priorityMed: '#8B5CF6', // Purple 500
-  priorityMedBg: '#F5F3FF',
-  priorityLow: '#0D9488', // Teal 600
-  priorityLowBg: '#F0FDFA',
+  // Priority colors - Soft Cute Badges
+  priorityHigh: '#E11D48', // Berry Rose
+  priorityHighBg: '#FFE4E6',
+  priorityMed: '#7C3AED', // Soft Violet
+  priorityMedBg: '#EDE9FE',
+  priorityLow: '#0D9488', // Arctic Teal
+  priorityLowBg: '#CCFBF1',
 
-  danger: '#EF4444',
+  danger: '#F43F5E',
   success: '#10B981',
 };
 
@@ -41,9 +43,9 @@ export const Spacing = {
 };
 
 export const Radius = {
-  sm: 6,
-  md: 10,
-  lg: 14,
-  xl: 20,
+  sm: 8,
+  md: 14,
+  lg: 18,
+  xl: 24,
   full: 9999,
 };

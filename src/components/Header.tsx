@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { ArcticFoxLogo } from './ArcticFoxLogo';
 import { Colors, Spacing, Radius } from '../constants/theme';
 
 interface HeaderProps {
@@ -9,16 +9,14 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  title = 'TaskMaster',
-  subtitle = 'Manage your project tasks easily with real-time Firebase sync',
+  title = 'SnowyFox Tasks 🦊',
+  subtitle = 'Quản lý công việc thông minh cùng Cáo Tuyết & Biển xanh',
 }) => {
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
-        <View style={styles.iconCircle}>
-          <Ionicons name="checkbox-outline" size={26} color={Colors.primary} />
-        </View>
-        <View style={styles.textContainer}>
+        <ArcticFoxLogo size={44} />
+        <View style={[styles.textContainer, { marginLeft: Spacing.md }]}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>{subtitle}</Text>
         </View>
