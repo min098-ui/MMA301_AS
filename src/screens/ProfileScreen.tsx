@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { ArcticFoxLogo } from '../components/ArcticFoxLogo';
+import { AxolotlLogo } from '../components/AxolotlLogo';
 import { Colors, Spacing, Radius } from '../constants/theme';
 import { isFirebaseConfigured } from '../services/firebaseConfig';
 
@@ -15,13 +15,13 @@ export const ProfileScreen: React.FC = () => {
         {/* User Card */}
         <View style={styles.profileCard}>
           <View style={{ marginBottom: Spacing.md }}>
-            <ArcticFoxLogo size={76} />
+            <AxolotlLogo size={80} />
           </View>
-          <Text style={styles.userName}>Nguyen Tuong Vy (Cáo Tuyết 🦊❄️)</Text>
+          <Text style={styles.userName}>Nguyen Tuong Vy (Axolotl Pink 🌸✨)</Text>
           <Text style={styles.userRole}>Practical Exam 1 – Mode: Public CRUD</Text>
 
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>Ocean & Snow Edition 🌊</Text>
+            <Text style={styles.badgeText}>Axolotl Sweet Edition 💖</Text>
           </View>
         </View>
 

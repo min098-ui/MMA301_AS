@@ -1,33 +1,33 @@
 export const Colors = {
-  // Arctic Ocean & Snowy Fox Palette
-  primary: '#0284C7', // Ocean Sky Blue
-  primaryLight: '#E0F2FE', // Frosted Ice Blue
-  primaryDark: '#0369A1', // Deep Arctic Ocean
-  accent: '#38BDF8', // Glacial Cyan
-  accentSoft: '#BAE6FD', // Pastel Snow Ice
-  background: '#F0F9FF', // Soft Snowy Light Blue
+  // Cute Pink Axolotl Palette
+  primary: '#F43F5E', // Strawberry Axolotl Pink
+  primaryLight: '#FFF1F2', // Soft Milk Rose
+  primaryDark: '#BE123C', // Deep Berry Rose
+  accent: '#FB7185', // Coral Blossom Pink
+  accentSoft: '#FFE4E6', // Pastel Marshmallow Pink
+  background: '#FFF5F7', // Softest Baby Pink
   surface: '#FFFFFF',
-  surfaceVariant: '#E0F2FE', // Ice Frost Chip
-  border: '#BAE6FD', // Soft Ice Border
-  textPrimary: '#0C4A6E', // Deep Arctic Navy
-  textSecondary: '#0284C7', // Soft Ocean Blue
-  textMuted: '#64748B', // Arctic Mist
+  surfaceVariant: '#FFE4E6', // Frosted Strawberry Milk
+  border: '#FECDD3', // Delicate Pink Border
+  textPrimary: '#881337', // Deep Raspberry
+  textSecondary: '#E11D48', // Sweet Rose
+  textMuted: '#FDA4AF', // Soft Blush
 
-  // Status colors - Cute Pastel
-  statusTodo: '#0284C7', // Arctic Blue
-  statusTodoBg: '#E0F2FE',
-  statusInProgress: '#D97706', // Warm Amber
+  // Status colors - Cute Pastel Sweets
+  statusTodo: '#EC4899', // Cotton Candy Pink
+  statusTodoBg: '#FDF2F8',
+  statusInProgress: '#F59E0B', // Honey Peach
   statusInProgressBg: '#FEF3C7',
-  statusCompleted: '#059669', // Emerald Mint
-  statusCompletedBg: '#D1FAE5',
+  statusCompleted: '#10B981', // Mint Macaron
+  statusCompletedBg: '#ECFDF5',
 
   // Priority colors - Soft Cute Badges
-  priorityHigh: '#E11D48', // Berry Rose
+  priorityHigh: '#E11D48', // Strawberry Red
   priorityHighBg: '#FFE4E6',
-  priorityMed: '#7C3AED', // Soft Violet
-  priorityMedBg: '#EDE9FE',
-  priorityLow: '#0D9488', // Arctic Teal
-  priorityLowBg: '#CCFBF1',
+  priorityMed: '#A855F7', // Lavender Sweet
+  priorityMedBg: '#F3E8FF',
+  priorityLow: '#06B6D4', // Pastel Aqua
+  priorityLowBg: '#ECFEFF',
 
   danger: '#F43F5E',
   success: '#10B981',
@@ -43,9 +43,9 @@ export const Spacing = {
 };
 
 export const Radius = {
-  sm: 8,
-  md: 14,
-  lg: 18,
-  xl: 24,
+  sm: 10,
+  md: 16,
+  lg: 22,
+  xl: 28,
   full: 9999,
 };

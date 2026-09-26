@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { ArcticFoxLogo } from './ArcticFoxLogo';
+import { AxolotlLogo } from './AxolotlLogo';
 import { Colors, Spacing, Radius } from '../constants/theme';
 
 interface HeaderProps {
@@ -9,13 +9,13 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  title = 'SnowyFox Tasks 🦊',
-  subtitle = 'Quản lý công việc thông minh cùng Cáo Tuyết & Biển xanh',
+  title = 'Axolotl Tasks 🌸',
+  subtitle = 'Quản lý công việc ngọt ngào cùng bé Axolotl hồng',
 }) => {
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
-        <ArcticFoxLogo size={44} />
+        <AxolotlLogo size={46} />
         <View style={[styles.textContainer, { marginLeft: Spacing.md }]}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>{subtitle}</Text>

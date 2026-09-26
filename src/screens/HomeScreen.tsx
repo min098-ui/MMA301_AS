@@ -18,7 +18,7 @@ import { TaskCard } from '../components/TaskCard';
 import { TaskModal } from '../components/TaskModal';
 import { FilterTabs } from '../components/FilterTabs';
 import { EmptyState } from '../components/EmptyState';
-import { ArcticFoxLogo } from '../components/ArcticFoxLogo';
+import { AxolotlLogo } from '../components/AxolotlLogo';
 import { Colors, Spacing, Radius } from '../constants/theme';
 
 export const HomeScreen: React.FC = () => {
@@ -83,11 +83,11 @@ export const HomeScreen: React.FC = () => {
       {/* Intro Header */}
       <View style={styles.introCard}>
         <View style={styles.introTop}>
-          <ArcticFoxLogo size={48} />
+          <AxolotlLogo size={52} />
           <View style={[styles.introTextBox, { marginLeft: Spacing.md }]}>
-            <Text style={styles.appName}>SnowyFox Tasks 🦊❄️</Text>
+            <Text style={styles.appName}>Axolotl Tasks 🌸</Text>
             <Text style={styles.appDescription}>
-              Task Management theo phong cách Cáo Tuyết & Biển Xanh
+              Quản lý công việc ngọt ngào cùng bé Axolotl hồng
             </Text>
           </View>
           <TouchableOpacity
@@ -96,7 +96,7 @@ export const HomeScreen: React.FC = () => {
             activeOpacity={0.8}
           >
             <Ionicons name="add" size={20} color="#FFFFFF" />
-            <Text style={styles.headerAddText}>Tạo mới</Text>
+            <Text style={styles.headerAddText}>+ Tạo mới</Text>
           </TouchableOpacity>
         </View>
 

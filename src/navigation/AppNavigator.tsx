@@ -68,24 +68,24 @@ export const AppNavigator: React.FC = () => {
           name="Home"
           component={HomeScreen}
           options={{
-            title: 'Nhiệm vụ 🦊',
-            headerTitle: 'SnowyFox Tasks 🌊',
+            title: 'Nhiệm vụ 🌸',
+            headerTitle: 'Axolotl Tasks 🌸',
           }}
         />
         <Tab.Screen
           name="Teams"
           component={TeamsScreen}
           options={{
-            title: 'Đội ngũ ❄️',
-            headerTitle: 'Đội Ngũ Cáo Tuyết',
+            title: 'Đội ngũ 🎀',
+            headerTitle: 'Biệt Đội Axolotl',
           }}
         />
         <Tab.Screen
           name="Profile"
           component={ProfileScreen}
           options={{
-            title: 'Hồ sơ ✨',
-            headerTitle: 'Hồ Sơ Cáo Tuyết',
+            title: 'Hồ sơ 💖',
+            headerTitle: 'Hồ Sơ Axolotl',
           }}
         />
       </Tab.Navigator>

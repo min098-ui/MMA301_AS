@@ -2,25 +2,25 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { ArcticFoxLogo } from '../components/ArcticFoxLogo';
+import { AxolotlLogo } from '../components/AxolotlLogo';
 import { Colors, Spacing, Radius } from '../constants/theme';
 
 export const TeamsScreen: React.FC = () => {
   const upcomingFeatures = [
     {
       icon: 'people-outline' as const,
-      title: 'Shared Workspaces',
-      description: 'Collaborate with teammates in real-time across multiple projects.',
+      title: 'Không gian làm việc chung',
+      description: 'Cộng tác cùng đồng đội trong thời gian thực trên nhiều dự án dễ thương.',
     },
     {
       icon: 'person-add-outline' as const,
-      title: 'Assignee Allocation',
-      description: 'Assign tasks directly to members using the assigneeId schema field.',
+      title: 'Phân công nhiệm vụ',
+      description: 'Giao việc trực tiếp cho các thành viên thông qua trường assigneeId.',
     },
     {
-      icon: 'shield-checkmark-outline' as const,
-      title: 'Role-Based Permissions',
-      description: 'Granular access control and admin management for organization teams.',
+      icon: 'sparkles-outline' as const,
+      title: 'Phân quyền linh hoạt',
+      description: 'Quản trị nhóm và bảo mật phân quyền thông minh cho tổ chức.',
     },
   ];
 
@@ -28,17 +28,17 @@ export const TeamsScreen: React.FC = () => {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={{ marginTop: Spacing.lg, marginBottom: Spacing.md }}>
-          <ArcticFoxLogo size={76} />
+          <AxolotlLogo size={80} />
         </View>
 
         <View style={styles.badge}>
-          <Text style={styles.badgeText}>Milestone Preview ❄️</Text>
+          <Text style={styles.badgeText}>Milestone Preview 🌸</Text>
         </View>
 
-        <Text style={styles.title}>Đội Ngũ & Cộng Tác</Text>
+        <Text style={styles.title}>Biệt Đội Axolotl & Cộng Tác</Text>
         <Text style={styles.subtitle}>
-          Tính năng hợp tác nhóm theo phong cách Cáo Tuyết & Biển Xanh (Practical Exam 2).
-          Data model đã có sẵn teamId và assigneeId!
+          Tính năng hợp tác nhóm theo phong cách Axolotl ngọt ngào (Practical Exam 2).
+          Data model Firestore đã có sẵn teamId và assigneeId!
         </Text>
 
         <View style={styles.card}>
