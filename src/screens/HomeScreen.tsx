@@ -22,6 +22,7 @@ import { AxolotlLogo } from '../components/AxolotlLogo';
 import { ThemeSelector } from '../components/ThemeSelector';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
+import { useToast } from '../context/ToastContext';
 import { Spacing, Radius, Shadows } from '../constants/theme';
 
 export const HomeScreen: React.FC = () => {
@@ -45,6 +46,7 @@ export const HomeScreen: React.FC = () => {
 
   const { t, language, toggleLanguage } = useLanguage();
   const { colors, theme } = useTheme();
+  const { showToast } = useToast();
   const [modalVisible, setModalVisible] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
 
@@ -61,9 +63,28 @@ export const HomeScreen: React.FC = () => {
   const handleModalSubmit = async (data: CreateTaskInput | UpdateTaskInput) => {
     if (taskToEdit) {
       await editTask(taskToEdit.id, data);
+      showToast({
+        type: 'info',
+        title: language === 'vi' ? 'Đã cập nhật' : 'Updated',
+        message: t.toastUpdated,
+      });
     } else {
       await addTask(data as CreateTaskInput);
+      showToast({
+        type: 'success',
+        title: language === 'vi' ? 'Thành công' : 'Success',
+        message: t.toastCreated,
+      });
     }
+  };
+
+  const handleDeleteTask = async (id: string) => {
+    await removeTask(id);
+    showToast({
+      type: 'delete',
+      title: language === 'vi' ? 'Đã xóa' : 'Deleted',
+      message: t.toastDeleted,
+    });
   };
 
   const handleToggleStatus = async (task: Task) => {
@@ -74,6 +95,11 @@ export const HomeScreen: React.FC = () => {
           ? 'Completed'
           : 'To Do';
     await editTask(task.id, { status: nextStatus });
+    showToast({
+      type: 'info',
+      title: language === 'vi' ? 'Trạng thái' : 'Status Updated',
+      message: `"${task.title}" ➔ ${nextStatus}`,
+    });
   };
 
   const counts = {
@@ -293,7 +319,7 @@ export const HomeScreen: React.FC = () => {
                 <TaskCard
                   task={item}
                   onEdit={handleOpenEditModal}
-                  onDelete={removeTask}
+                  onDelete={handleDeleteTask}
                   onToggleStatus={handleToggleStatus}
                 />
               </View>

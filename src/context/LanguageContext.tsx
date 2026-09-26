@@ -58,6 +58,10 @@ interface Translations {
   prioHigh: string;
   prioMed: string;
   prioLow: string;
+  toastCreated: string;
+  toastUpdated: string;
+  toastDeleted: string;
+  toastStatusChanged: string;
 }
 
 const translations: Record<Language, Translations> = {
@@ -117,6 +121,10 @@ const translations: Record<Language, Translations> = {
     prioHigh: 'High',
     prioMed: 'Medium',
     prioLow: 'Low',
+    toastCreated: 'Task created successfully!',
+    toastUpdated: 'Task updated successfully!',
+    toastDeleted: 'Task deleted successfully!',
+    toastStatusChanged: 'Task status updated!',
   },
   vi: {
     appName: 'TaskMaster Pro',
@@ -174,6 +182,10 @@ const translations: Record<Language, Translations> = {
     prioHigh: 'Cao',
     prioMed: 'Trung bình',
     prioLow: 'Thấp',
+    toastCreated: 'Đã tạo công việc mới thành công!',
+    toastUpdated: 'Đã cập nhật công việc thành công!',
+    toastDeleted: 'Đã xóa công việc thành công!',
+    toastStatusChanged: 'Đã cập nhật trạng thái công việc!',
   },
 };
 
