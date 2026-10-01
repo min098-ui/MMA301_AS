@@ -175,7 +175,7 @@ export const HomeScreen: React.FC = () => {
             </Text>
           </View>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
             {/* Language Pill */}
             <TouchableOpacity
               style={[
@@ -509,11 +509,14 @@ const styles = StyleSheet.create({
   topRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 12,
     marginBottom: Spacing.md,
   },
   brandInfo: {
     flex: 1,
-    marginLeft: Spacing.md,
+    minWidth: 140,
+    marginLeft: Spacing.sm,
   },
   titleRow: {
     flexDirection: 'row',

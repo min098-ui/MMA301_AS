@@ -9,6 +9,7 @@
     "@react-navigation/native": "^7.4.1",
     "expo": "~57.0.25",
     "expo-status-bar": "~57.0.1",
+    "expo-updates": "~57.0.24",
     "firebase": "^12.19.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
