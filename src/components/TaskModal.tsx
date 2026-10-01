@@ -14,6 +14,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Task, TaskStatus, TaskPriority, CreateTaskInput, UpdateTaskInput } from '../types/task';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import { Colors, Spacing, Radius, Shadows } from '../constants/theme';
 
 interface TaskModalProps {
@@ -21,12 +22,14 @@ interface TaskModalProps {
   onClose: () => void;
   onSubmit: (taskData: CreateTaskInput | UpdateTaskInput) => Promise<void>;
   taskToEdit?: Task | null;
+  onDeleteTask?: (id: string) => Promise<void>;
 }
 
 interface FormInnerProps {
   taskToEdit?: Task | null;
   onClose: () => void;
   onSubmit: (taskData: CreateTaskInput | UpdateTaskInput) => Promise<void>;
+  onDeleteTask?: (id: string) => Promise<void>;
 }
 
 const getDefaultDueDate = () => {
@@ -35,8 +38,14 @@ const getDefaultDueDate = () => {
   return date.toISOString().split('T')[0];
 };
 
-const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubmit }) => {
+const TaskFormContent: React.FC<FormInnerProps> = ({
+  taskToEdit,
+  onClose,
+  onSubmit,
+  onDeleteTask,
+}) => {
   const { t } = useLanguage();
+  const { colors } = useTheme();
   const isEditing = Boolean(taskToEdit);
 
   const [title, setTitle] = useState(taskToEdit ? taskToEdit.title : '');
@@ -81,18 +90,18 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
   };
 
   const statuses: { key: TaskStatus; label: string; activeColor: string; activeBg: string }[] = [
-    { key: 'To Do', label: t.todo, activeColor: Colors.statusTodo, activeBg: Colors.statusTodoBg },
+    { key: 'To Do', label: t.todo, activeColor: colors.statusTodo, activeBg: colors.statusTodoBg },
     {
       key: 'In Progress',
       label: t.inProgress,
-      activeColor: Colors.statusInProgress,
-      activeBg: Colors.statusInProgressBg,
+      activeColor: colors.statusInProgress,
+      activeBg: colors.statusInProgressBg,
     },
     {
       key: 'Completed',
       label: t.done,
-      activeColor: Colors.statusCompleted,
-      activeBg: Colors.statusCompletedBg,
+      activeColor: colors.statusCompleted,
+      activeBg: colors.statusCompletedBg,
     },
   ];
 
@@ -102,65 +111,65 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
     activeColor: string;
     activeBg: string;
   }[] = [
-    { key: 'Low', label: t.prioLow, activeColor: Colors.priorityLow, activeBg: Colors.priorityLowBg },
+    { key: 'Low', label: t.prioLow, activeColor: colors.priorityLow, activeBg: colors.priorityLowBg },
     {
       key: 'Medium',
       label: t.prioMed,
-      activeColor: Colors.priorityMed,
-      activeBg: Colors.priorityMedBg,
+      activeColor: colors.priorityMed,
+      activeBg: colors.priorityMedBg,
     },
     {
       key: 'High',
       label: t.prioHigh,
-      activeColor: Colors.priorityHigh,
-      activeBg: Colors.priorityHighBg,
+      activeColor: colors.priorityHigh,
+      activeBg: colors.priorityHighBg,
     },
   ];
 
   return (
-    <View style={styles.modalContainer}>
+    <View style={[styles.modalContainer, { backgroundColor: colors.surface }]}>
       {/* Top Handle Bar */}
-      <View style={styles.dragHandle} />
+      <View style={[styles.dragHandle, { backgroundColor: colors.border }]} />
 
       {/* Header */}
       <View style={styles.modalHeader}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.modalTitle}>{isEditing ? t.editTaskTitle : t.createTaskTitle}</Text>
-          <Text style={styles.modalSubtitle}>
+          <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>{isEditing ? t.editTaskTitle : t.createTaskTitle}</Text>
+          <Text style={[styles.modalSubtitle, { color: colors.textSecondary }]}>
             {isEditing ? t.editTaskSubtitle : t.createTaskSubtitle}
           </Text>
         </View>
-        <TouchableOpacity onPress={onClose} style={styles.closeBtn} activeOpacity={0.7}>
-          <Ionicons name="close" size={20} color={Colors.textSecondary} />
+        <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { backgroundColor: colors.surfaceVariant }]} activeOpacity={0.7}>
+          <Ionicons name="close" size={20} color={colors.textSecondary} />
         </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.formScroll} showsVerticalScrollIndicator={false}>
         {/* Title Field */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>
-            {t.titleLabel} <Text style={styles.requiredAsterisk}>*</Text>
+          <Text style={[styles.label, { color: colors.textPrimary }]}>
+            {t.titleLabel} <Text style={{ color: colors.danger }}>*</Text>
           </Text>
           <TextInput
-            style={[styles.input, Boolean(titleError) && styles.inputError]}
+            style={[styles.input, { backgroundColor: colors.surfaceVariant, borderColor: colors.border, color: colors.textPrimary }, Boolean(titleError) && { borderColor: colors.danger, backgroundColor: colors.dangerBg }]}
             placeholder="e.g. Design UI / Refactor Firestore CRUD"
-            placeholderTextColor={Colors.textMuted}
+            placeholderTextColor={colors.textMuted}
             value={title}
             onChangeText={(text) => {
               setTitle(text);
               if (titleError) setTitleError('');
             }}
           />
-          {Boolean(titleError) && <Text style={styles.errorText}>{titleError}</Text>}
+          {Boolean(titleError) && <Text style={[styles.errorText, { color: colors.danger }]}>{titleError}</Text>}
         </View>
 
         {/* Description Field */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>{t.descLabel}</Text>
+          <Text style={[styles.label, { color: colors.textPrimary }]}>{t.descLabel}</Text>
           <TextInput
-            style={[styles.input, styles.textArea]}
+            style={[styles.input, styles.textArea, { backgroundColor: colors.surfaceVariant, borderColor: colors.border, color: colors.textPrimary }]}
             placeholder="Add context, acceptance criteria, or technical details..."
-            placeholderTextColor={Colors.textMuted}
+            placeholderTextColor={colors.textMuted}
             value={description}
             onChangeText={setDescription}
             multiline
@@ -171,7 +180,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
 
         {/* Status Selector */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>{t.statusLabel}</Text>
+          <Text style={[styles.label, { color: colors.textPrimary }]}>{t.statusLabel}</Text>
           <View style={styles.pillRow}>
             {statuses.map((item) => {
               const active = status === item.key;
@@ -180,6 +189,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
                   key={item.key}
                   style={[
                     styles.segmentedPill,
+                    { backgroundColor: colors.surfaceVariant, borderColor: colors.border },
                     active && {
                       backgroundColor: item.activeBg,
                       borderColor: item.activeColor,
@@ -199,6 +209,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
                   <Text
                     style={[
                       styles.segmentedPillText,
+                      { color: colors.textSecondary },
                       active && { color: item.activeColor, fontWeight: '700' },
                     ]}
                   >
@@ -212,7 +223,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
 
         {/* Priority Selector */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>{t.priorityLabel}</Text>
+          <Text style={[styles.label, { color: colors.textPrimary }]}>{t.priorityLabel}</Text>
           <View style={styles.pillRow}>
             {priorities.map((item) => {
               const active = priority === item.key;
@@ -221,6 +232,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
                   key={item.key}
                   style={[
                     styles.segmentedPill,
+                    { backgroundColor: colors.surfaceVariant, borderColor: colors.border },
                     active && {
                       backgroundColor: item.activeBg,
                       borderColor: item.activeColor,
@@ -229,15 +241,18 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
                   onPress={() => setPriority(item.key)}
                   activeOpacity={0.7}
                 >
-                  <View
-                    style={[
-                      styles.dot,
-                      { backgroundColor: active ? item.activeColor : Colors.textMuted },
-                    ]}
-                  />
+                  {active && (
+                    <Ionicons
+                      name="checkmark-circle"
+                      size={14}
+                      color={item.activeColor}
+                      style={{ marginRight: 4 }}
+                    />
+                  )}
                   <Text
                     style={[
                       styles.segmentedPillText,
+                      { color: colors.textSecondary },
                       active && { color: item.activeColor, fontWeight: '700' },
                     ]}
                   >
@@ -251,13 +266,13 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
 
         {/* Due Date Field */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>{t.dueDateLabel}</Text>
-          <View style={styles.inputWithIcon}>
-            <Ionicons name="calendar-outline" size={18} color={Colors.textMuted} style={styles.inputIcon} />
+          <Text style={[styles.label, { color: colors.textPrimary }]}>{t.dueDateLabel}</Text>
+          <View style={[styles.inputWithIcon, { backgroundColor: colors.surfaceVariant, borderColor: colors.border }]}>
+            <Ionicons name="calendar-outline" size={18} color={colors.textMuted} style={styles.inputIcon} />
             <TextInput
-              style={styles.innerInput}
+              style={[styles.innerInput, { color: colors.textPrimary }]}
               placeholder="YYYY-MM-DD"
-              placeholderTextColor={Colors.textMuted}
+              placeholderTextColor={colors.textMuted}
               value={dueDate}
               onChangeText={setDueDate}
             />
@@ -266,18 +281,30 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
       </ScrollView>
 
       {/* Action Buttons */}
-      <View style={styles.buttonRow}>
+      <View style={[styles.buttonRow, { borderTopColor: colors.borderLight }]}>
+        {isEditing && onDeleteTask && taskToEdit && (
+          <TouchableOpacity
+            style={[styles.deleteInsideModalBtn, { backgroundColor: colors.dangerBg, borderColor: '#FECDD3' }]}
+            onPress={() => onDeleteTask(taskToEdit.id)}
+            disabled={isSubmitting}
+            activeOpacity={0.7}
+            accessibilityLabel="Delete task"
+          >
+            <Ionicons name="trash-outline" size={18} color={colors.danger} />
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
-          style={styles.cancelButton}
+          style={[styles.cancelButton, { backgroundColor: colors.surfaceVariant, borderColor: colors.border }]}
           onPress={onClose}
           disabled={isSubmitting}
           activeOpacity={0.7}
         >
-          <Text style={styles.cancelText}>{t.cancel}</Text>
+          <Text style={[styles.cancelText, { color: colors.textSecondary }]}>{t.cancel}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.submitButton, isSubmitting && styles.disabledButton]}
+          style={[styles.submitButton, { backgroundColor: colors.primary }, isSubmitting && styles.disabledButton]}
           onPress={handleValidateAndSubmit}
           disabled={isSubmitting}
           activeOpacity={0.8}
@@ -301,7 +328,13 @@ const TaskFormContent: React.FC<FormInnerProps> = ({ taskToEdit, onClose, onSubm
   );
 };
 
-export const TaskModal: React.FC<TaskModalProps> = ({ visible, onClose, onSubmit, taskToEdit }) => {
+export const TaskModal: React.FC<TaskModalProps> = ({
+  visible,
+  onClose,
+  onSubmit,
+  taskToEdit,
+  onDeleteTask,
+}) => {
   if (!visible) return null;
 
   return (
@@ -315,6 +348,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ visible, onClose, onSubmit
           taskToEdit={taskToEdit}
           onClose={onClose}
           onSubmit={onSubmit}
+          onDeleteTask={onDeleteTask}
         />
       </KeyboardAvoidingView>
     </Modal>
@@ -494,5 +528,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: '#FFFFFF',
+  },
+  deleteInsideModalBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: Radius.md,
+    backgroundColor: '#FEE2E2',
+    borderWidth: 1,
+    borderColor: '#FECDD3',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

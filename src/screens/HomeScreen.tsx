@@ -9,6 +9,7 @@ import {
   RefreshControl,
   ActivityIndicator,
   useWindowDimensions,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -49,6 +50,7 @@ export const HomeScreen: React.FC = () => {
   const { showToast } = useToast();
   const [modalVisible, setModalVisible] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+  const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
 
   const handleOpenCreateModal = () => {
     setTaskToEdit(null);
@@ -78,13 +80,36 @@ export const HomeScreen: React.FC = () => {
     }
   };
 
-  const handleDeleteTask = async (id: string) => {
-    await removeTask(id);
-    showToast({
-      type: 'delete',
-      title: language === 'vi' ? 'Đã xóa' : 'Deleted',
-      message: t.toastDeleted,
-    });
+  const handleConfirmDelete = async () => {
+    if (!taskToDelete) return;
+    const targetId = taskToDelete.id;
+    const targetTitle = taskToDelete.title;
+    setTaskToDelete(null);
+
+    try {
+      await removeTask(targetId);
+      showToast({
+        type: 'delete',
+        title: language === 'vi' ? 'Đã xóa' : 'Deleted',
+        message: `${t.toastDeleted}: "${targetTitle}"`,
+      });
+    } catch (err: any) {
+      console.error('Failed to remove task:', err);
+    }
+  };
+
+  const handleDeleteFromEditModal = async (id: string) => {
+    setModalVisible(false);
+    try {
+      await removeTask(id);
+      showToast({
+        type: 'delete',
+        title: language === 'vi' ? 'Đã xóa' : 'Deleted',
+        message: t.toastDeleted,
+      });
+    } catch (err: any) {
+      console.error('Failed to remove task from modal:', err);
+    }
   };
 
   const handleToggleStatus = async (task: Task) => {
@@ -150,39 +175,45 @@ export const HomeScreen: React.FC = () => {
             </Text>
           </View>
 
-          {/* Segmented EN / VI Toggle */}
-          <View
-            style={[
-              styles.langSegment,
-              {
-                backgroundColor: colors.surfaceVariant,
-                borderColor: colors.border,
-              },
-            ]}
-          >
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            {/* Language Pill */}
             <TouchableOpacity
-              style={[styles.langBtn, language === 'en' && styles.langBtnActive]}
-              onPress={() => language !== 'en' && toggleLanguage()}
+              style={[
+                styles.pillBtn,
+                {
+                  backgroundColor: colors.surface,
+                  borderColor: colors.borderFocus,
+                },
+              ]}
+              onPress={toggleLanguage}
               activeOpacity={0.7}
             >
-              <Text style={[styles.langText, language === 'en' && { color: colors.primary, fontWeight: '800' }]}>
-                EN
+              <Ionicons name="globe-outline" size={16} color={colors.primary} />
+              <Text style={{ fontSize: 13, marginLeft: 6 }}>
+                <Text
+                  style={{
+                    fontWeight: language === 'en' ? '800' : '500',
+                    color: language === 'en' ? colors.primary : colors.textMuted,
+                  }}
+                >
+                  EN
+                </Text>
+                <Text style={{ color: colors.textMuted, fontWeight: '500' }}> / </Text>
+                <Text
+                  style={{
+                    fontWeight: language === 'vi' ? '800' : '500',
+                    color: language === 'vi' ? colors.primary : colors.textMuted,
+                  }}
+                >
+                  VI
+                </Text>
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.langBtn, language === 'vi' && styles.langBtnActive]}
-              onPress={() => language !== 'vi' && toggleLanguage()}
-              activeOpacity={0.7}
-            >
-              <Text style={[styles.langText, language === 'vi' && { color: colors.primary, fontWeight: '800' }]}>
-                VI
-              </Text>
-            </TouchableOpacity>
+
+            {/* Ô CHUYỂN MÀU (Color Theme Switcher) - Pill Design */}
+            <ThemeSelector />
           </View>
         </View>
-
-        {/* Ô CHUYỂN MÀU (Color Theme Switcher) */}
-        <ThemeSelector />
 
         {/* Primary Action Button */}
         <TouchableOpacity
@@ -319,7 +350,7 @@ export const HomeScreen: React.FC = () => {
                 <TaskCard
                   task={item}
                   onEdit={handleOpenEditModal}
-                  onDelete={handleDeleteTask}
+                  onDelete={(task) => setTaskToDelete(task)}
                   onToggleStatus={handleToggleStatus}
                 />
               </View>
@@ -370,7 +401,69 @@ export const HomeScreen: React.FC = () => {
           onClose={() => setModalVisible(false)}
           onSubmit={handleModalSubmit}
           taskToEdit={taskToEdit}
+          onDeleteTask={handleDeleteFromEditModal}
         />
+
+        {/* Custom Delete Confirmation Modal (100% Native-reliable) */}
+        <Modal
+          visible={Boolean(taskToDelete)}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setTaskToDelete(null)}
+        >
+          <View style={styles.deleteModalOverlay}>
+            <View
+              style={[
+                styles.deleteModalCard,
+                {
+                  backgroundColor: colors.surface,
+                  borderColor: colors.border,
+                },
+              ]}
+            >
+              <View style={styles.deleteModalIconBox}>
+                <Ionicons name="trash" size={28} color="#EF4444" />
+              </View>
+
+              <Text style={[styles.deleteModalTitle, { color: colors.textPrimary }]}>
+                {language === 'vi' ? 'Xác nhận xóa công việc' : 'Delete Task'}
+              </Text>
+
+              <Text style={[styles.deleteModalDesc, { color: colors.textSecondary }]}>
+                {language === 'vi'
+                  ? `Bạn có chắc chắn muốn xóa "${taskToDelete?.title}" vĩnh viễn không? Dữ liệu sẽ được xóa trực tiếp khỏi Firestore.`
+                  : `Are you sure you want to permanently delete "${taskToDelete?.title}"?`}
+              </Text>
+
+              <View style={styles.deleteModalBtnRow}>
+                <TouchableOpacity
+                  style={[
+                    styles.deleteModalCancelBtn,
+                    {
+                      backgroundColor: colors.surfaceVariant,
+                      borderColor: colors.border,
+                    },
+                  ]}
+                  onPress={() => setTaskToDelete(null)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.deleteModalCancelText, { color: colors.textSecondary }]}>
+                    {t.cancel}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.deleteModalConfirmBtn}
+                  onPress={handleConfirmDelete}
+                  activeOpacity={0.8}
+                >
+                  <Ionicons name="trash" size={16} color="#FFFFFF" style={{ marginRight: 6 }} />
+                  <Text style={styles.deleteModalConfirmText}>{t.delete}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );
@@ -455,29 +548,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 2,
   },
-  langSegment: {
+  pillBtn: {
     flexDirection: 'row',
-    borderRadius: Radius.sm,
-    padding: 2,
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: Radius.full,
     borderWidth: 1,
-  },
-  langBtn: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-  },
-  langBtnActive: {
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  langText: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: '#64748B',
   },
   primaryAddBtn: {
     flexDirection: 'row',
@@ -574,5 +651,82 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     ...Shadows.button,
+  },
+  deleteModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.65)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: Spacing.xl,
+  },
+  deleteModalCard: {
+    width: '100%',
+    maxWidth: 400,
+    borderRadius: Radius.xl,
+    padding: Spacing.xl,
+    alignItems: 'center',
+    borderWidth: 1.5,
+    ...Shadows.modal,
+  },
+  deleteModalIconBox: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#FEE2E2',
+    borderWidth: 1,
+    borderColor: '#FECDD3',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: Spacing.md,
+  },
+  deleteModalTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    marginBottom: 6,
+    textAlign: 'center',
+    letterSpacing: -0.2,
+  },
+  deleteModalDesc: {
+    fontSize: 13,
+    lineHeight: 19,
+    textAlign: 'center',
+    marginBottom: Spacing.xl,
+    paddingHorizontal: Spacing.sm,
+  },
+  deleteModalBtnRow: {
+    flexDirection: 'row',
+    gap: Spacing.md,
+    width: '100%',
+  },
+  deleteModalCancelBtn: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: Radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+  },
+  deleteModalCancelText: {
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  deleteModalConfirmBtn: {
+    flex: 1.2,
+    flexDirection: 'row',
+    paddingVertical: 12,
+    borderRadius: Radius.md,
+    backgroundColor: '#EF4444',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#EF4444',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  deleteModalConfirmText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
 });

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-export type ThemeId = 'snow' | 'fire';
+export type ThemeId = 'snow' | 'fire' | 'sakura';
 
 export interface ThemeColors {
   primary: string;
@@ -51,7 +51,7 @@ export interface ThemeConfig {
   id: ThemeId;
   name: string;
   nameVi: string;
-  icon: 'snow' | 'flame';
+  icon: 'snow' | 'flame' | 'flower';
   previewColor: string;
   colors: ThemeColors;
 }
@@ -159,6 +159,57 @@ export const themes: Record<ThemeId, ThemeConfig> = {
       mascotBg: '#FFEDD5',
     },
   },
+  sakura: {
+    id: 'sakura',
+    name: 'Cherry Blossom Fox',
+    nameVi: 'Cáo Anh Đào',
+    icon: 'flower',
+    previewColor: '#EC4899', // Pink 500
+    colors: {
+      primary: '#EC4899', // Pink 500
+      primaryHover: '#DB2777', // Pink 600
+      primaryDark: '#BE185D', // Pink 700
+      primaryLight: '#FCE7F3', // Pink 100
+      primarySoft: '#F9A8D4', // Pink 300
+      accent: '#F472B6', // Pink 400
+      accentLight: '#FDF2F8', // Pink 50
+      background: '#FFF5F7', // Pink 50
+      surface: '#FFFFFF',
+      surfaceElevated: '#FFFFFF',
+      surfaceVariant: '#FCE7F3', // Pink 100
+      surfaceSubtle: '#FDF2F8',
+      border: '#FBCFE8', // Pink 200
+      borderLight: '#FCE7F3',
+      borderFocus: '#EC4899',
+      textPrimary: '#500724', // Pink 950
+      textSecondary: '#831843', // Pink 900
+      textMuted: '#9D174D', // Pink 800
+      statusTodo: '#EC4899',
+      statusTodoBg: '#FCE7F3',
+      statusTodoBorder: '#F9A8D4',
+      statusInProgress: '#D97706',
+      statusInProgressBg: '#FEF3C7',
+      statusInProgressBorder: '#FDE68A',
+      statusCompleted: '#059669',
+      statusCompletedBg: '#ECFDF5',
+      statusCompletedBorder: '#A7F3D0',
+      priorityHigh: '#DC2626',
+      priorityHighBg: '#FEF2F2',
+      priorityHighBorder: '#FECDD3',
+      priorityMed: '#DB2777', // Pink 600
+      priorityMedBg: '#FCE7F3',
+      priorityMedBorder: '#FBCFE8',
+      priorityLow: '#D97706',
+      priorityLowBg: '#FEF3C7',
+      priorityLowBorder: '#FDE68A',
+      danger: '#EF4444',
+      dangerBg: '#FEE2E2',
+      success: '#10B981',
+      successBg: '#D1FAE5',
+      mascotBorder: '#F472B6',
+      mascotBg: '#FCE7F3',
+    },
+  },
 };
 
 interface ThemeContextType {
@@ -175,7 +226,11 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [themeId, setThemeId] = useState<ThemeId>('snow');
 
   const cycleTheme = () => {
-    setThemeId((prev) => (prev === 'snow' ? 'fire' : 'snow'));
+    setThemeId((prev) => {
+      if (prev === 'snow') return 'fire';
+      if (prev === 'fire') return 'sakura';
+      return 'snow';
+    });
   };
 
   const currentTheme = themes[themeId];

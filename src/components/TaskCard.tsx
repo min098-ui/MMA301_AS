@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Task, TaskStatus, TaskPriority } from '../types/task';
 import { useLanguage } from '../context/LanguageContext';
@@ -9,7 +9,7 @@ import { Spacing, Radius, Shadows } from '../constants/theme';
 interface TaskCardProps {
   task: Task;
   onEdit: (task: Task) => void;
-  onDelete: (id: string) => void;
+  onDelete: (task: Task) => void;
   onToggleStatus?: (task: Task) => void;
 }
 
@@ -72,22 +72,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onTo
     }
   };
 
-  const confirmDelete = () => {
-    Alert.alert(
-      t.deleteTitle,
-      `${t.deleteConfirm} "${task.title}"?`,
-      [
-        { text: t.cancel, style: 'cancel' },
-        {
-          text: t.delete,
-          style: 'destructive',
-          onPress: () => onDelete(task.id),
-        },
-      ],
-      { cancelable: true },
-    );
-  };
-
   const statusStyle = getStatusBadge(task.status);
   const priorityStyle = getPriorityBadge(task.priority);
 
@@ -147,17 +131,19 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onTo
             onPress={() => onEdit(task)}
             accessibilityLabel="Edit task"
             activeOpacity={0.7}
+            hitSlop={{ top: 10, bottom: 10, left: 6, right: 6 }}
           >
-            <Ionicons name="create-outline" size={16} color={colors.primary} />
+            <Ionicons name="create-outline" size={17} color={colors.primary} />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.actionBtn, styles.deleteActionBtn]}
-            onPress={confirmDelete}
+            onPress={() => onDelete(task)}
             accessibilityLabel="Delete task"
             activeOpacity={0.7}
+            hitSlop={{ top: 10, bottom: 10, left: 6, right: 10 }}
           >
-            <Ionicons name="trash-outline" size={16} color={colors.danger} />
+            <Ionicons name="trash-outline" size={17} color={colors.danger} />
           </TouchableOpacity>
         </View>
       </View>

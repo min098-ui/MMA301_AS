@@ -71,9 +71,11 @@ export const FoxLogo: React.FC<FoxLogoProps> = ({
   const combinedScale = Animated.multiply(scaleAnim, tapBounceAnim);
 
   const foxImage =
-    themeId === 'fire'
-      ? require('../../assets/fire_fox_3d.jpg')
-      : require('../../assets/snow_fox_3d.jpg');
+    themeId === 'sakura'
+      ? require('../../assets/sakura_fox_3d.jpg')
+      : themeId === 'fire'
+        ? require('../../assets/fire_fox_3d.jpg')
+        : require('../../assets/snow_fox_3d.jpg');
 
   return (
     <TouchableOpacity
