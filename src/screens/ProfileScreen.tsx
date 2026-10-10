@@ -1,16 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { AxolotlLogo } from '../components/AxolotlLogo';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 import { Spacing, Radius, Shadows } from '../constants/theme';
 import { isFirebaseConfigured } from '../services/firebaseConfig';
 
 export const ProfileScreen: React.FC = () => {
   const { t } = useLanguage();
   const { colors, theme } = useTheme();
+  const { user, userProfile, logout } = useAuth();
   const firebaseConnected = isFirebaseConfigured();
 
   return (
@@ -19,15 +21,23 @@ export const ProfileScreen: React.FC = () => {
         {/* User Profile Card */}
         <View style={[styles.profileCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
           <AxolotlLogo size={76} showOnlineBadge={true} />
-          <Text style={[styles.userName, { color: colors.textPrimary }]}>{t.profileTitle}</Text>
-          <Text style={[styles.userRole, { color: colors.textSecondary }]}>{t.profileRole}</Text>
+          <Text style={[styles.userName, { color: colors.textPrimary }]}>{userProfile?.name || 'User'}</Text>
+          <Text style={[styles.userRole, { color: colors.textSecondary }]}>{userProfile?.email || user?.email}</Text>
 
           <View style={[styles.badge, { backgroundColor: colors.primaryLight, borderColor: colors.primarySoft }]}>
             <Ionicons name={theme.icon as any} size={12} color={colors.primary} />
             <View style={[styles.liveDot, { backgroundColor: colors.primary }]} />
-            <Text style={[styles.badgeText, { color: colors.primary }]}>{t.profileTag}</Text>
+            <Text style={[styles.badgeText, { color: colors.primary }]}>Online</Text>
           </View>
         </View>
+
+        <TouchableOpacity 
+          style={[styles.logoutButton, { backgroundColor: colors.danger }]} 
+          onPress={logout}
+        >
+          <Ionicons name="log-out-outline" size={20} color="#fff" />
+          <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
 
         {/* Database & System Architecture Card */}
         <View style={[styles.infoCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
@@ -115,6 +125,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: Spacing.md,
     ...Shadows.card,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: Spacing.md,
+    borderRadius: Radius.md,
+    width: '100%',
+    maxWidth: 520,
+    marginBottom: Spacing.lg,
+    gap: 8,
+  },
+  logoutText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
   userName: {
     fontSize: 19,

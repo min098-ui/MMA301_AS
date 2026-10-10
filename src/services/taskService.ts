@@ -8,6 +8,7 @@ import {
   onSnapshot,
   query,
   orderBy,
+  where,
   Unsubscribe,
   DocumentData,
   QuerySnapshot,
@@ -39,6 +40,36 @@ export const mapDocToTask = (id: string, data: DocumentData): Task => {
 /**
  * Real-time listener for tasks collection, ordered by createdAt descending
  */
+export const subscribeToTeamTasks = (
+  teamId: string,
+  onNext: (tasks: Task[]) => void,
+  onError?: (error: Error) => void,
+): Unsubscribe => {
+  try {
+    const tasksRef = collection(db, TASKS_COLLECTION);
+    const q = query(tasksRef, where('teamId', '==', teamId));
+
+    return onSnapshot(
+      q,
+      (snapshot: QuerySnapshot<DocumentData>) => {
+        const tasks: Task[] = snapshot.docs.map((docSnap) =>
+          mapDocToTask(docSnap.id, docSnap.data()),
+        );
+        // Sort in memory to avoid needing complex composite index initially
+        tasks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        onNext(tasks);
+      },
+      (error) => {
+        console.error('Error listening to team tasks:', error);
+        if (onError) onError(error);
+      },
+    );
+  } catch (err: any) {
+    if (onError) onError(err);
+    return () => {};
+  }
+};
+
 export const subscribeToTasks = (
   onNext: (tasks: Task[]) => void,
   onError?: (error: Error) => void,

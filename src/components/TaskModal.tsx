@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { teamService } from '../services/teamService';
+import { Team } from '../types/team';
 import {
   Modal,
   View,
@@ -38,6 +41,8 @@ const getDefaultDueDate = () => {
   return date.toISOString().split('T')[0];
 };
 
+
+
 const TaskFormContent: React.FC<FormInnerProps> = ({
   taskToEdit,
   onClose,
@@ -46,6 +51,7 @@ const TaskFormContent: React.FC<FormInnerProps> = ({
 }) => {
   const { t } = useLanguage();
   const { colors } = useTheme();
+  const { user } = useAuth();
   const isEditing = Boolean(taskToEdit);
 
   const [title, setTitle] = useState(taskToEdit ? taskToEdit.title : '');
@@ -57,8 +63,33 @@ const TaskFormContent: React.FC<FormInnerProps> = ({
   const [dueDate, setDueDate] = useState(
     taskToEdit?.dueDate ? taskToEdit.dueDate : getDefaultDueDate(),
   );
+  
+  const [teamId, setTeamId] = useState<string | null>(taskToEdit?.teamId || null);
+  const [assigneeId, setAssigneeId] = useState<string | null>(taskToEdit?.assigneeId || null);
+  const [userTeams, setUserTeams] = useState<Team[]>([]);
+  const [teamMembers, setTeamMembers] = useState<any[]>([]);
+
   const [titleError, setTitleError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  React.useEffect(() => {
+    if (user) {
+      const unsub = teamService.getUserTeams(user.uid, (teams) => setUserTeams(teams));
+      return () => unsub();
+    }
+  }, [user]);
+
+  React.useEffect(() => {
+    if (teamId) {
+      const unsub = teamService.getTeamMembers(teamId, (members) => setTeamMembers(members));
+      return () => unsub();
+    } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTeamMembers([]);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setAssigneeId(null);
+    }
+  }, [teamId]);
 
   const handleValidateAndSubmit = async () => {
     if (!title.trim()) {
@@ -80,6 +111,8 @@ const TaskFormContent: React.FC<FormInnerProps> = ({
         status,
         priority,
         dueDate: dueDate.trim() || new Date().toISOString().split('T')[0],
+        teamId,
+        assigneeId
       });
       onClose();
     } catch (err: any) {
@@ -263,6 +296,78 @@ const TaskFormContent: React.FC<FormInnerProps> = ({
             })}
           </View>
         </View>
+
+        {/* Team Selector */}
+        <View style={styles.inputGroup}>
+          <Text style={[styles.label, { color: colors.textPrimary }]}>Team</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexDirection: 'row' }}>
+            <TouchableOpacity
+              style={[
+                styles.segmentedPill,
+                { backgroundColor: colors.surfaceVariant, borderColor: colors.border, marginRight: 8, paddingHorizontal: 12 },
+                !teamId && { backgroundColor: colors.primaryLight, borderColor: colors.primary },
+              ]}
+              onPress={() => setTeamId(null)}
+            >
+              <Text style={[styles.segmentedPillText, { color: colors.textSecondary }, !teamId && { color: colors.primary, fontWeight: '700' }]}>Personal</Text>
+            </TouchableOpacity>
+            {userTeams.map((team) => {
+              const active = teamId === team.id;
+              return (
+                <TouchableOpacity
+                  key={team.id}
+                  style={[
+                    styles.segmentedPill,
+                    { backgroundColor: colors.surfaceVariant, borderColor: colors.border, marginRight: 8, paddingHorizontal: 12 },
+                    active && { backgroundColor: colors.primaryLight, borderColor: colors.primary },
+                  ]}
+                  onPress={() => setTeamId(team.id)}
+                >
+                  <Text style={[styles.segmentedPillText, { color: colors.textSecondary }, active && { color: colors.primary, fontWeight: '700' }]}>
+                    {team.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+
+        {/* Assignee Selector (only if team is selected) */}
+        {teamId && teamMembers.length > 0 && (
+          <View style={styles.inputGroup}>
+            <Text style={[styles.label, { color: colors.textPrimary }]}>Assignee</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexDirection: 'row' }}>
+              <TouchableOpacity
+                style={[
+                  styles.segmentedPill,
+                  { backgroundColor: colors.surfaceVariant, borderColor: colors.border, marginRight: 8, paddingHorizontal: 12 },
+                  !assigneeId && { backgroundColor: colors.primaryLight, borderColor: colors.primary },
+                ]}
+                onPress={() => setAssigneeId(null)}
+              >
+                <Text style={[styles.segmentedPillText, { color: colors.textSecondary }, !assigneeId && { color: colors.primary, fontWeight: '700' }]}>Unassigned</Text>
+              </TouchableOpacity>
+              {teamMembers.map((member) => {
+                const active = assigneeId === member.userId;
+                return (
+                  <TouchableOpacity
+                    key={member.userId}
+                    style={[
+                      styles.segmentedPill,
+                      { backgroundColor: colors.surfaceVariant, borderColor: colors.border, marginRight: 8, paddingHorizontal: 12 },
+                      active && { backgroundColor: colors.primaryLight, borderColor: colors.primary },
+                    ]}
+                    onPress={() => setAssigneeId(member.userId)}
+                  >
+                    <Text style={[styles.segmentedPillText, { color: colors.textSecondary }, active && { color: colors.primary, fontWeight: '700' }]}>
+                      {member.user?.name || 'User'}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        )}
 
         {/* Due Date Field */}
         <View style={styles.inputGroup}>

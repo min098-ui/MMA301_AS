@@ -1,4 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { teamService } from '../services/teamService';
+import { Team } from '../types/team';
 import { Task, CreateTaskInput, UpdateTaskInput, TaskStatus } from '../types/task';
 import {
   subscribeToTasks,
@@ -61,7 +64,9 @@ const SAMPLE_INITIAL_TASKS: Task[] = [
 ];
 
 export const useTasks = () => {
+  const { user } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [userTeams, setUserTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -70,43 +75,48 @@ export const useTasks = () => {
 
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
+    let unsubTeams: (() => void) | undefined;
 
-    try {
-      unsubscribe = subscribeToTasks(
-        (fetchedTasks) => {
-          if (fetchedTasks.length > 0) {
+    if (user) {
+      unsubTeams = teamService.getUserTeams(user.uid, (teams) => {
+        setUserTeams(teams);
+      });
+
+      try {
+        unsubscribe = subscribeToTasks(
+          (fetchedTasks) => {
             setTasks(fetchedTasks);
-          } else if (!isFirebaseConfigured()) {
-            // Default sample preview if Firestore is empty or not yet keyed
-            setTasks(SAMPLE_INITIAL_TASKS);
-          } else {
-            setTasks([]);
-          }
-          setLoading(false);
-          setError(null);
-        },
-        (err) => {
-          console.warn('Realtime subscription fallback to local state:', err.message);
-          // Graceful fallback for offline / unauthenticated test mode
-          setTasks((prev) => (prev.length > 0 ? prev : SAMPLE_INITIAL_TASKS));
-          setLoading(false);
-          setError(null);
-        },
-      );
-    } catch (err: any) {
-      console.warn('Failed to subscribe:', err);
-      setTimeout(() => {
-        setTasks(SAMPLE_INITIAL_TASKS);
+            setLoading(false);
+            setError(null);
+          },
+          (err) => {
+            console.warn('Realtime subscription fallback to local state:', err.message);
+            setLoading(false);
+            setError(null);
+          },
+        );
+      } catch (err: any) {
+        console.warn('Failed to subscribe:', err);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(false);
-      }, 0);
+      }
+    } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTasks([]);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setUserTeams([]);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLoading(false);
     }
 
     return () => {
+      if (unsubTeams) unsubTeams();
       if (unsubscribe) unsubscribe();
     };
-  }, []);
+  }, [user]);
 
   const refresh = useCallback(async () => {
+    if (!user) return;
     setRefreshing(true);
     try {
       const fetched = await fetchTasks();
@@ -119,7 +129,7 @@ export const useTasks = () => {
     } finally {
       setRefreshing(false);
     }
-  }, []);
+  }, [user]);
 
   const addTask = async (input: CreateTaskInput): Promise<string> => {
     try {
@@ -179,6 +189,10 @@ export const useTasks = () => {
 
   // Filter and search computation
   const filteredTasks = tasks.filter((task) => {
+    // Only show tasks that belong to user's teams or have no team
+    const hasAccess = !task.teamId || userTeams.some(t => t.id === task.teamId);
+    if (!hasAccess) return false;
+
     const matchesFilter = selectedFilter === 'All' || task.status === selectedFilter;
     const matchesSearch =
       task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
