@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { AxolotlLogo } from '../components/AxolotlLogo';
@@ -14,6 +14,8 @@ export const ProfileScreen: React.FC = () => {
   const { colors, theme } = useTheme();
   const { user, userProfile, logout } = useAuth();
   const firebaseConnected = isFirebaseConfigured();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
@@ -33,10 +35,11 @@ export const ProfileScreen: React.FC = () => {
 
         <TouchableOpacity 
           style={[styles.logoutButton, { backgroundColor: colors.danger }]} 
-          onPress={logout}
+          onPress={() => setShowLogoutModal(true)}
+          activeOpacity={0.8}
         >
           <Ionicons name="log-out-outline" size={20} color="#fff" />
-          <Text style={styles.logoutText}>Logout</Text>
+          <Text style={styles.logoutText}>{t.logout}</Text>
         </TouchableOpacity>
 
         {/* Database & System Architecture Card */}
@@ -103,6 +106,78 @@ export const ProfileScreen: React.FC = () => {
           </Text>
         </View>
       </ScrollView>
+
+      {/* Confirmation Modal: Pressing Logout clears the session and returns the app to the Login screen */}
+      <Modal
+        visible={showLogoutModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => {
+          if (!isLoggingOut) setShowLogoutModal(false);
+        }}
+      >
+        <View style={styles.modalOverlay}>
+          <View
+            style={[
+              styles.modalCard,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
+          >
+            <View
+              style={[
+                styles.modalIconBox,
+                { backgroundColor: colors.dangerBg, borderColor: colors.danger },
+              ]}
+            >
+              <Ionicons name="log-out-outline" size={28} color={colors.danger} />
+            </View>
+
+            <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
+              {t.logoutConfirmTitle}
+            </Text>
+
+            <Text style={[styles.modalDesc, { color: colors.textSecondary }]}>
+              {t.logoutConfirmMsg}
+            </Text>
+
+            <View style={styles.modalBtnRow}>
+              <TouchableOpacity
+                style={[
+                  styles.modalCancelBtn,
+                  { backgroundColor: colors.surfaceSubtle, borderColor: colors.border },
+                ]}
+                onPress={() => setShowLogoutModal(false)}
+                disabled={isLoggingOut}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.modalCancelText, { color: colors.textSecondary }]}>
+                  {t.cancel}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.modalConfirmBtn, { backgroundColor: colors.danger }]}
+                onPress={async () => {
+                  try {
+                    setIsLoggingOut(true);
+                    await logout();
+                  } catch (err) {
+                    console.error('Logout error:', err);
+                  } finally {
+                    setIsLoggingOut(false);
+                    setShowLogoutModal(false);
+                  }
+                }}
+                disabled={isLoggingOut}
+                activeOpacity={0.8}
+              >
+                <Ionicons name="log-out-outline" size={18} color="#FFFFFF" />
+                <Text style={styles.modalConfirmText}>{t.logout}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -232,5 +307,80 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 12,
     lineHeight: 18,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.65)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: Spacing.xl,
+  },
+  modalCard: {
+    width: '100%',
+    maxWidth: 400,
+    borderRadius: Radius.xl,
+    padding: Spacing.xl,
+    alignItems: 'center',
+    borderWidth: 1.5,
+    ...Shadows.modal,
+  },
+  modalIconBox: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: Spacing.md,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    marginBottom: 8,
+    textAlign: 'center',
+    letterSpacing: -0.2,
+  },
+  modalDesc: {
+    fontSize: 13,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginBottom: Spacing.xl,
+    paddingHorizontal: Spacing.sm,
+  },
+  modalBtnRow: {
+    flexDirection: 'row',
+    gap: Spacing.md,
+    width: '100%',
+  },
+  modalCancelBtn: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: Radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+  },
+  modalCancelText: {
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  modalConfirmBtn: {
+    flex: 1.2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    borderRadius: Radius.md,
+    gap: 6,
+    shadowColor: '#EF4444',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  modalConfirmText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
 });

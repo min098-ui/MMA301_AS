@@ -62,6 +62,9 @@ interface Translations {
   toastUpdated: string;
   toastDeleted: string;
   toastStatusChanged: string;
+  logout: string;
+  logoutConfirmTitle: string;
+  logoutConfirmMsg: string;
 }
 
 const translations: Record<Language, Translations> = {
@@ -125,6 +128,9 @@ const translations: Record<Language, Translations> = {
     toastUpdated: 'Task updated successfully!',
     toastDeleted: 'Task deleted successfully!',
     toastStatusChanged: 'Task status updated!',
+    logout: 'Log Out',
+    logoutConfirmTitle: 'Confirm Logout',
+    logoutConfirmMsg: 'Are you sure you want to log out? Your session will end and you will be returned to the Login screen.',
   },
   vi: {
     appName: 'TaskMaster Pro',
@@ -186,6 +192,9 @@ const translations: Record<Language, Translations> = {
     toastUpdated: 'Đã cập nhật công việc thành công!',
     toastDeleted: 'Đã xóa công việc thành công!',
     toastStatusChanged: 'Đã cập nhật trạng thái công việc!',
+    logout: 'Đăng xuất',
+    logoutConfirmTitle: 'Xác nhận Đăng xuất',
+    logoutConfirmMsg: 'Bạn có chắc chắn muốn đăng xuất không? Phiên làm việc của bạn sẽ kết thúc và quay về màn hình đăng nhập.',
   },
 };
 
